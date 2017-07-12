@@ -4,23 +4,17 @@
 	<div class="container">
 		<div class="jumbotron">
 			<img src="/images/logo.svg" width="160">
-			<h1>Welcome</h1>
-			<p>This is your new <a href="http://keystonejs.com" target="_blank">KeystoneJS</a> website.</p>
-			<p>
-				It includes the latest versions of
-				<a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>
-				and <a href="http://www.jquery.com/" target="_blank">jQuery</a>.
-			</p>
-			<p>Visit the <a href="http://keystonejs.com/guide" target="_blank">Getting Started</a> guide to learn how to customise it.</p>
+			<h1>Добро пожаловать!</h1>
+			<p>Приветствуем Вас в панели администрирования системой <a href="http://toirus.ru" target="_blank">ТОиРУС</a>.</p>
 			<hr>
 			{% if user and user.canAccessKeystone %}
 				<p>
-					<a href="/keystone" class="btn btn-lg btn-primary">Open the Admin UI</a>
+					<a href="/keystone" class="btn btn-lg btn-primary">Открыть Admin UI</a>
 				</p>
 			{% else %}
 				<p>We have created a default Admin user for you with the email <strong>olejek8@yandex.ru</strong> and the password <strong>admin</strong>.</p>
 				<p>
-					<a href="/keystone/signin" style="margin-right: 10px" class="btn btn-lg btn-primary">Sign in</a>
+					<a href="/keystone/signin" style="margin-right: 10px" class="btn btn-lg btn-primary">Войти</a>
 					to use the Admin UI.
 				</p>
 			{% endif %}

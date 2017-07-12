@@ -6,13 +6,22 @@ var Types = keystone.Field.Types;
  * ==========
  */
 var User = new keystone.List('User');
+var uuid = require('uuid');
 
 User.add({
-	name: { type: Types.Name, required: true, index: true },
+	name: { type: Types.Name, required: true, index: true, label: 'Имя'},
 	email: { type: Types.Email, initial: true, required: true, unique: true, index: true },
-	password: { type: Types.Password, initial: true, required: true },
+	password: { type: Types.Password, initial: true, required: true, label: 'Пароль' },
+	status: { type: Types.Boolean, index: true, initial: true, label: 'Статус' },
+	uuid: { 
+		type: String, 
+		index: { unique: true },
+		initial: true,
+		default: uuid.v4,
+		label: 'Идентификатор'
+		}
 }, 'Permissions', {
-	isAdmin: { type: Boolean, label: 'Can access Keystone', index: true },
+	isAdmin: { type: Boolean, label: 'Администратор', index: true }
 });
 
 // Provide access to Keystone
@@ -24,5 +33,5 @@ User.schema.virtual('canAccessKeystone').get(function () {
 /**
  * Registration
  */
-User.defaultColumns = 'name, email, isAdmin';
+User.defaultColumns = 'name, email, password, status, uuid, isAdmin';
 User.register();

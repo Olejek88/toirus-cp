@@ -6,8 +6,8 @@ var _ = require('lodash');
 */
 exports.initLocals = function (req, res, next) {
 	res.locals.navLinks = [
-		{ label: 'Home', key: 'home', href: '/' },
-		{ label: 'Contact', key: 'contact', href: '/contact' },
+		{ label: 'Домой', key: 'home', href: '/' },
+		{ label: 'Контакты', key: 'contact', href: '/contact' },
 	];
 	res.locals.user = req.user;
 	next();
@@ -34,7 +34,7 @@ exports.flashMessages = function (req, res, next) {
  */
 exports.requireUser = function (req, res, next) {
 	if (!req.user) {
-		req.flash('error', 'Please sign in to access this page.');
+		req.flash('error', 'Пожалуйста залогиньтесь для доступа к странице');
 		res.redirect('/keystone/signin');
 	} else {
 		next();
