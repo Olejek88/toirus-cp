@@ -1,15 +1,88 @@
 var _ = require('lodash');
+var querystring = require('querystring');
+var keystone = require('keystone');
+
+exports.packages = [
+	'lodash'
+];
+
+
+exports.initLocals = function(req, res, next) {
+
+	var locals = res.locals;
+	//console.log (req.user);
+	if (req.user)
+	locals.navLinks = [
+		{ label: 'Аккаунт',	key: 'home',		href: '/' },		
+		{ label: 'Услуги',	key: 'services',	href: '/services' },
+		{ label: 'Платежи',	key: 'payments',	href: '/payments' },
+		{ label: 'Вопросы',	key: 'tickets',		href: '/tickets' },
+	];
+	else
+	locals.navLinks = [
+		{ label: 'Домой',			key: 'home',		href: '/' }
+	];
+	
+	locals.user = req.user;
+
+	locals.basedir = keystone.get('basedir');
+
+	locals.page = {
+		title: 'Панель управления услугами системы ТОиРУС',
+		path: req.url.split("?")[0] // strip the query - handy for redirecting back to the page
+	};
+
+	locals.qs_set = qs_set(req, res);
+
+	if (req.cookies.target && req.cookies.target == locals.page.path) res.clearCookie('target');
+
+	var bowser = require('../lib/node-bowser').detect(req);
+
+	locals.system = {
+		mobile: bowser.mobile,
+		ios: bowser.ios,
+		iphone: bowser.iphone,
+		ipad: bowser.ipad,
+		android: bowser.android
+	}
+
+	next();
+
+};
 
 
 /**
-	Initialises the standard view locals
+	Make sponsors universally available
 */
-exports.initLocals = function (req, res, next) {
-	res.locals.navLinks = [
-		{ label: 'Домой', key: 'home', href: '/' },
-		{ label: 'Контакты', key: 'contact', href: '/contact' },
-	];
-	res.locals.user = req.user;
+
+exports.loadSponsors = function(req, res, next) {
+	keystone.list('Organisation').model.find().sort('name').exec(function(err, sponsors) {
+		if (err) return next(err);
+		req.sponsors = sponsors;
+		res.locals.sponsors = sponsors;
+		next();
+	});
+}
+
+
+/**
+	Inits the error handler functions into `req`
+*/
+
+exports.initErrorHandlers = function(req, res, next) {
+	res.err = function(err, title, message) {
+		res.status(500).render('errors/500', {
+			err: err,
+			errorTitle: title,
+			errorMsg: message
+		});
+	}
+	res.notfound = function(title, message) {
+		res.status(404).render('errors/404', {
+			errorTitle: title,
+			errorMsg: message
+		});
+	}
 	next();
 };
 
@@ -17,26 +90,49 @@ exports.initLocals = function (req, res, next) {
 /**
 	Fetches and clears the flashMessages before a view is rendered
 */
-exports.flashMessages = function (req, res, next) {
+
+exports.flashMessages = function(req, res, next) {
 	var flashMessages = {
 		info: req.flash('info'),
 		success: req.flash('success'),
 		warning: req.flash('warning'),
-		error: req.flash('error'),
+		error: req.flash('error')
 	};
-	res.locals.messages = _.some(flashMessages, function (msgs) { return msgs.length; }) ? flashMessages : false;
+	//console.log ("flashM");
+	//res.locals.messages = _.any(flashMessages, function(msgs) { return msgs.length }) ? flashMessages : false;
+	res.locals.messages = flashMessages;
 	next();
 };
-
 
 /**
 	Prevents people from accessing protected pages when they're not signed in
  */
-exports.requireUser = function (req, res, next) {
+
+exports.requireUser = function(req, res, next) {
 	if (!req.user) {
-		req.flash('error', 'Пожалуйста залогиньтесь для доступа к странице');
-		res.redirect('/keystone/signin');
+		req.flash('error', 'Please sign in to access this page.');
+		res.redirect('/signin');
 	} else {
 		next();
 	}
-};
+}
+
+/**
+	Returns a closure that can be used within views to change a parameter in the query string
+	while preserving the rest.
+*/
+
+var qs_set = exports.qs_set = function(req, res) {
+	return function qs_set(obj) {
+		var params = _.clone(req.query);
+		for (var i in obj) {
+			if (obj[i] === undefined || obj[i] === null) {
+				delete params[i];
+			} else if (obj.hasOwnProperty(i)) {
+				params[i] = obj[i];
+			}
+		}
+		var qs = querystring.stringify(params);
+		return req.path + (qs ? '?' + qs : '');
+	}
+}

@@ -1,0 +1,40 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			span.entypo.entypo-home(font-size:'40px')
+			|   Мой аккаунт			
+			a(href='/meetups').text-muted редактировать
+		.page-content.tile.ph-0.pv-2.mb-2
+			.panel-heading
+				span.entypo.entypo-user
+				| #{user.name}
+			br
+			p.lead.ph-1 e-mail: #{user.email}
+			if user.status		
+				p.lead.green.ph-1 статус: активен
+			else
+				p.lead.ph-1 статус: не активен
+			if user.client
+				p.lead.ph-1 клиент: #{user.client}
+		.page-content.tile.ph-0.pv-2.mb-2
+			.panel-heading
+				span.entypo.entypo-star
+				| Статистика аккаунта
+		.page-content.tile.ph-0.pv-2.mb-2
+			.panel-heading
+				span.entypo.entypo-bell
+				| Открытые тикеты
+
+		.page-content.tile.ph-0.pv-2.mb-2
+			.panel-heading
+				span.entypo.entypo-book
+				| Последние транзакции
+							
+block js
+	script(src='/js/views/me.js')

@@ -1,0 +1,32 @@
+//- SITE FOOTER
+footer.site-footer.site-footer--sticky: .container
+	.row
+		.col-sm-4
+			h5.footer-heading О системе
+			p Мобильная платформа для "полевого" уровня процессов ТОиР: программный комплекс "ТОИРУС" позволяет: проводить обмен оперативной информацией в системы верхнего уровня АСУ ТОиР или ERP-систему предприятия, обеспечить он-лайн контроль выполнения наряд-заданий, повысить производительность эксплуатационного персонала.
+			ul.list-inline
+				li: a(href='http://toirus.ru') Больше о ТОиРУС
+				li: a(href='mailto:sale@toirus.ru') Написать нам
+			p
+
+		.col-sm-8
+			.row
+				.col-xs-4
+					h5.footer-heading Пользователям
+					ul
+						if user
+							li: a(href='/clients') Аккаунт
+							li: a(href='/payments') Транзакции
+							li: a(href='/account') Сводная
+							li: a(href='/services') Сервисы
+						else
+							li: a(href='/signin') Войти
+							li: a(href='/join') Зарегистрироваться
+				.col-xs-4
+					h5.footer-heading Помощь
+					ul
+						li: a(href='/tickets') Поддержка
+						li: a(href='/contacts') Контакты
+						li: a(href='/faq') Помощь
+	.row.footer-copyright
+		p Copyright &copy; 2017 ТОиРУС. Powered by <a href='http://keystonejs.com' rel='external'>KeystoneJS</a>.

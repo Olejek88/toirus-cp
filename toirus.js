@@ -21,9 +21,13 @@ keystone.init({
 	'signin logo': '../images/toir.png',
 	'title': 'Панель управления услугами системы ТОиРУС',
 
+	'role model': 'Role',				// use whatever name for the role model
+	'permission model': 'Permission',        // use whatever name for the permission model
+
 	'views': 'templates/views',
-	'view engine': '.html',
-	'custom engine': cons.nunjucks,
+	'view engine': 'pug',
+//	'custom engine': require('pug').__express,
+//	'custom engine': cons.nunjucks,
 
 	'auto update': true,
 	'session': true,
@@ -46,9 +50,9 @@ i18n.configure({
     directory: __dirname + '/locales'
 });*/
 
+
 keystone.set('routes', require('./routes'));
 
-if ()
 keystone.set('nav', {
 	Пользователи: 'users',
 	Клиенты: 'clients',
@@ -62,6 +66,13 @@ keystone.set('nav', {
 	Настройки:  { 	Методы: 'methods', }
 });
 
-
+keystone.set('email locals', {
+	utils: keystone.utils,
+	host: (function() {
+		if (keystone.get('env') === 'staging') return 'http://127.0.0.1';
+		if (keystone.get('env') === 'production') return 'http://cp.toirus.ru';
+		return (keystone.get('host') || 'http://localhost:') + (keystone.get('port') || '3000');
+	})()
+});
 
 keystone.start();

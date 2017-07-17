@@ -1,0 +1,50 @@
+//-
+	Join
+	------------------------------
+	
+	Args
+	* modal  - boolean
+	* initial [default "join"] - accepts "signin" | "join" | "password"
+	
+mixin form-join(args)
+	.auth-box.modal-pane-join(class=args.modal && args.initial != 'join' ? 'hidden' : null)
+		if args.modal
+			.modal-header
+				button(type="button", class="close", data-dismiss="modal", aria-hidden="true") &times;
+				h4.modal-title Зарегистрироваться в облаке ТОиРУС
+		div(class=args.modal ? 'modal-body' : null)
+			//пока без логинов через соцсети
+			//include ../../includes/social-signin
+			p.auth-form-divider: span.auth-form-divider-text or
+			//- p Or use your email, that's okay too:
+			form(method='post', action='/join', autocomplete='off', novalidate).auth-form
+				input(type='hidden', name='action', value='join')
+				input(type='hidden', name='target', value=!args.modal ? form.target : page.path)
+				if !args.modal
+					if form.error
+						.flash-messages
+							.alert.alert-danger
+								div!= form.error.message || form.error
+								
+								//- Field Errors
+								if form.error.errors && !_.isEmpty(form.error.errors)
+									ul
+										each error, key in form.error.errors
+											li!= error.msg
+					
+					- var checkFormError = function(key) { return form.error && form.error.errors && form.error.errors[key] ? 'has-error' : null }
+				.form-groups
+					.form-group(class=!args.modal ? checkFormError('name') : null)
+						label(for='name').sr-only name
+						input(type='text', name='name', placeholder='Имя', value=!args.modal ? form.firstname : null).form-control.form-control--first
+					.form-group(class=!args.modal ? checkFormError('email') : null)
+						label(for='email').sr-only Email
+						input(type='email', name='email', placeholder='Email', value=!args.modal ? form.email : null).form-control
+					.form-group(class=!args.modal ? checkFormError('password') : null)
+						label(for='password').sr-only Password
+						input(type='password', name='password', placeholder='Password', value=!args.modal ? form.password : null).form-control
+				button(type='submit').btn.btn-block.btn-primary.btn-submit Подключиться
+		
+			p.text-center.text-muted.mt-3
+				| Уже зарегистрированы? 
+				a(href=args.modal ? js : '/signin', rel=args.modal ? 'modal-pane' : null, data-modal-pane=args.modal ? 'signin' : null) Войти

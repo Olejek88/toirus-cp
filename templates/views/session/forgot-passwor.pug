@@ -1,0 +1,19 @@
+extends ../../layouts/default
+
+block flash-messages
+	//- intentionally blank
+
+block content
+	.container-xs
+		.page-intro
+			h1 Забыли пароль?
+			p.lead Без проблем, мы вышлем Вам ссылку на сброс пароля.
+		.page-content
+			+flash-messages(messages)
+			+auth-forms({ modal: false, initial: 'password' })
+
+block js
+	script.
+		jQuery(function($) {
+			$('.auth-form').find('.form-control').eq(0).focus().select();
+		});

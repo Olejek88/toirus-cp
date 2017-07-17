@@ -1,5 +1,6 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
+var Mongoose = require('mongoose');
 
 /**
  * User Model
@@ -9,10 +10,13 @@ var User = new keystone.List('User');
 var uuid = require('uuid');
 
 User.add({
-	name: { type: Types.Name, required: true, index: true, label: 'Имя'},
+	name: { type: String, required: true, index: true, label: 'Имя'},
 	email: { type: Types.Email, initial: true, required: true, unique: true, index: true },
 	password: { type: Types.Password, initial: true, required: true, label: 'Пароль' },
+	client: { type: Types.Relationship, ref: 'Client', many: false },
+	//client: { type: Mongoose.Schema.Types.ObjectId, ref: 'Client' },
 	status: { type: Types.Boolean, index: true, initial: true, label: 'Статус' },
+	roles: { type: Types.Relationship, ref: 'Role', many: true },
 	uuid: { 
 		type: String, 
 		index: { unique: true },
