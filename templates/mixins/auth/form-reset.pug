@@ -15,7 +15,7 @@ mixin form-reset(args)
 					class="close"
 					data-dismiss="modal"
 					aria-hidden="true") &times;
-				h4.modal-title Reset password
+				h4.modal-title Сброс пароля
 		div(class=args.modal ? 'modal-body' : null)
 			form.auth-form.form-signin(
 				method='post'
@@ -26,12 +26,12 @@ mixin form-reset(args)
 					name='action'
 					value='reset-password')
 				.form-control-box
-					label.sr-only(for='signin-password') New password
+					label.sr-only(for='signin-password') Новый пароль
 					input.form-control.form-control--last(
 						type='password'
 						name='password'
 						placeholder='Password'
 						id='signin-password'
 						value='')
-				button.btn.btn-block.btn-primary.btn-submit(type='submit') Reset password
+				button.btn.btn-block.btn-primary.btn-submit(type='submit') Сбросить паррль
 			

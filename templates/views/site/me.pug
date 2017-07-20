@@ -9,7 +9,7 @@ block content
 		.page-intro
 			span.entypo.entypo-home(font-size:'40px')
 			|   Мой аккаунт			
-			a(href='/meetups').text-muted редактировать
+			a(href='/meedit').text-muted редактировать
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-user
@@ -22,6 +22,7 @@ block content
 				p.lead.ph-1 статус: не активен
 			if user.client
 				p.lead.ph-1 клиент: #{user.client}
+			p.lead.ph-1 клиент: #{user.roles}
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-star

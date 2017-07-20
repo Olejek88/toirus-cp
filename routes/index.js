@@ -105,6 +105,15 @@ exports = module.exports = function (app) {
 	// User
 	app.all('/me*', middleware.requireUser);
 	app.all('/me', routes.views.me);
+	app.all('/meedit', routes.views.meedit);
+	
+	// Services
+	app.all('/services', routes.views.services);
+	app.all('/servicenew', routes.views.servicenew);
+	//app.all('/serviceedit', routes.views.serviceedit);
+	app.all('/service/:service', routes.views.service);
+	app.all('/service/:id', routes.views.service);
+
 	//app.all('/me/create/post', routes.views.createPost);
 	//app.all('/me/create/link', routes.views.createLink);
 

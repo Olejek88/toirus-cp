@@ -11,6 +11,8 @@ var nunjucks = require('nunjucks');
 keystone.init({
 	'name': 'toirus-cp',
 	'brand': 'ТОИРУС',
+	'back': '/me',
+
 	'port': '3000',
 	'host': '127.0.0.1',
 	'mongo': 'mongodb://localhost/toir-dev',
@@ -20,6 +22,8 @@ keystone.init({
 	'favicon': 'public/favicon.ico',
 	'signin logo': '../images/toir.png',
 	'title': 'Панель управления услугами системы ТОиРУС',
+
+	'emails': 'templates/emails',
 
 	'role model': 'Role',				// use whatever name for the role model
 	'permission model': 'Permission',        // use whatever name for the permission model
@@ -31,6 +35,10 @@ keystone.init({
 
 	'auto update': true,
 	'session': true,
+	'session store': 'mongo',
+	'cookie secret': process.env.COOKIE_SECRET,
+	'mandrill api key': process.env.MANDRILL_KEY,
+	'mandrill username': process.env.MANDRILL_USERNAME,
 	'auth': true,
 	'user model': 'User',
 });

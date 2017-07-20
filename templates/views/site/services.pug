@@ -1,0 +1,42 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			span.entypo.entypo-cloud(font-size:40px)
+			|   Мои сервисы
+			a(href='/servicenew').text-muted  + заказать новый
+			br
+		if services.length
+			each server in services
+				if server
+					.page-content.tile.ph-0.pv-2.mb-2
+						.panel-heading
+							- var id = server._id;
+							span.entypo.entypo-cog
+							if server.status
+								|  #{server.name} (активен) 
+								| [ 
+								a(href='/service/' + id).text-muted перейти к управлению
+								| ]
+							else
+								|  #{server.name} (не активен) [ 
+								a(href='/service/' + id).text-muted перейти к управлению
+								|  ]
+						br
+						if server.client
+							p.lead.ph-1 Клиент: #{server.client.name}
+						p.lead.ph-1 База данных: #{server.dbase}
+						p.lead.ph-1 ip-адрес: #{server.ip}
+						p.lead.ph-1 Пользователей (активно/всего): #{server.users_used}/#{server.users_num}
+						p.lead.ph-1 Тегов (активно/всего): #{server.tags_used}/#{server.tags_num}
+						p.lead.ph-1 Дата регистрации услуги: #{server.date}
+						p.lead.ph-1 Дата окончания услуги: #{server.date_end}
+				else
+					h3.text-muted Нет заказанных услуг
+
+							

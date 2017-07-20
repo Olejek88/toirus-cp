@@ -2,19 +2,19 @@ extends ../../layouts/default
 	
 block content
 	.container-sm: .pv-2
-		h1!=errorTitle || 'Error (500)'
+		h1!=errorTitle || 'Ошибка сервера'
 		if 'object' == typeof errorMsg
 			div(style='margin: 30px 0;').debug!= htmlStringify(errorMsg)
 		else
-			p!= utils.textToHTML(errorMsg) || 'Sorry, the server encountered an error.<br><br>Please try again shortly, or contact us if the problem continues.'
+			p!= utils.textToHTML(errorMsg) || 'Извините, но с сервером случилась неприятность.<br><br>Свяжитесь с нами и мы постараемся решить вашу проблему как можно скорее.'
 		if err
 			hr.mv-2
-			h3 Error Details
+			h3 Детали ошибки
 			pre.mb-2: code
 				if 'string' == typeof err
 					!= utils.textToHTML(err)
 				else
 					!= htmlStringify(err)
 
-		p If you're seeing this error often please 
-			a(href='https://github.com/JedWatson/sydjs-site/issues', target='_blank') let us know.
+		p Сообщите нам если видите эту ошибку 
+			a(href='mailto:service@toirus.ru', target='_blank') по этому адресу.

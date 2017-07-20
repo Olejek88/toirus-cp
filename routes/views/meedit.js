@@ -5,15 +5,15 @@ var keystone = require('keystone'),
 exports = module.exports = function(req, res) {
 	
 	var view = new keystone.View(req, res),
-	locals = res.locals;
+		locals = res.locals;
 	
-	locals.section = 'me';
-	locals.page.title = 'ТОиРУС настройки аккаунта';
+	locals.section = 'meedit';
+	locals.page.title = 'ТОиРУС настройки профиль';
 			
 	view.on('post', { action: 'profile.details' }, function(next) {
 	
 		req.user.getUpdateHandler(req).process(req.body, {
-			fields: 'name, email' ,
+			fields: 'name, email, ',
 			flashErrors: true
 		}, function(err) {
 		
@@ -21,7 +21,7 @@ exports = module.exports = function(req, res) {
 				return next();
 			}
 			
-			req.flash('success', 'Your changes have been saved.');
+			req.flash('success', 'Изменения сохранены');
 			return next();
 		
 		});
@@ -51,7 +51,7 @@ exports = module.exports = function(req, res) {
 	view.on('post', { action: 'profile.password' }, function(next) {
 	
 		if (!req.body.password || !req.body.password_confirm) {
-			req.flash('error', 'Пожалуйста введите пароль.');
+			req.flash('error', 'Please enter a password.');
 			return next();
 		}
 	
@@ -64,13 +64,13 @@ exports = module.exports = function(req, res) {
 				return next();
 			}
 			
-			req.flash('success', 'Ваши изменения сохранены.');
+			req.flash('success', 'Your changes have been saved.');
 			return next();
 		
 		});
 	
 	});
 	
-	view.render('site/me');
+	view.render('site/meedit');
 	
 }

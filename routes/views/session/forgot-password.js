@@ -9,14 +9,14 @@ exports = module.exports = function(req, res) {
 	view.on('post', { action: 'forgot-password' }, function(next) {
 		
 		if (!req.body.email) {
-			req.flash('error', "Please enter an email address.");
+			req.flash('error', "Пожалуйста введите е-мэйл адрес.");
 			return next();
 		}
 
 		User.model.findOne().where('email', req.body.email).exec(function(err, user) {
 			if (err) return next(err);
 			if (!user) {
-				req.flash('error', "Sorry, we don't recognise that email address.");
+				req.flash('error', "Извините, но мы не можем найти данный адрес.");
 				return next();
 			}
 			user.resetPassword(function(err) {
