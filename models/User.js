@@ -20,7 +20,6 @@ User.add({
 	uuid: { 
 		type: String, 
 		index: { unique: true },
-		initial: true,
 		default: uuid.v4,
 		label: 'Идентификатор'
 		}

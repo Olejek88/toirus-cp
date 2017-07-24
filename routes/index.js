@@ -114,11 +114,12 @@ exports = module.exports = function (app) {
 	app.all('/service/:service', routes.views.service);
 	app.all('/service/:id', routes.views.service);
 
-	//app.all('/me/create/post', routes.views.createPost);
-	//app.all('/me/create/link', routes.views.createLink);
-
-	// Tools
-	//app.all('/notification-center', routes.views.tools['notification-center']);
+	// Tickets
+	app.all('/tickets', routes.views.tickets);
+	app.all('/ticketnew', routes.views.ticketnew);
+	//app.all('/serviceedit', routes.views.serviceedit);
+	app.all('/ticket/:ticket', routes.views.ticket);
+	app.all('/ticket/:id', routes.views.ticket);
 
 	// API
 	//app.all('/api*', keystone.middleware.api);

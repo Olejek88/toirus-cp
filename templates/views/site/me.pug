@@ -13,7 +13,7 @@ block content
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-user
-				| #{user.name}
+				|  #{user.name}
 			br
 			p.lead.ph-1 e-mail: #{user.email}
 			if user.status		
@@ -21,17 +21,28 @@ block content
 			else
 				p.lead.ph-1 статус: не активен
 			if user.client
-				p.lead.ph-1 клиент: #{user.client}
-			p.lead.ph-1 клиент: #{user.roles}
+				p.lead.ph-1 клиент: #{user.client.name}
+			//p.lead.ph-1 права доступа: #{user.roles}
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-star
 				| Статистика аккаунта
+			br
+			p.lead.ph-1 количество сервисов (активных/всего): #{serviceactive}/#{servicecount}
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-bell
 				| Открытые тикеты
-
+			if tickets
+				each ticket in tickets
+					if ticket
+						p.lead.ph-1 #{ticket.ticketId}
+						p.lead.ph-1 #{ticket.type}
+						p.lead.ph-1 #{ticket.status}
+						p.lead.ph-1 #{ticket.createdAt}
+						p.lead.ph-1 #{ticket.message}
+			else
+				h3.text-muted Нет запросов
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-book

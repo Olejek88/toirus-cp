@@ -1,0 +1,31 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			//span.entypo.entypo-help(font-size:32px)
+			//|   Мои запросы
+			//a(href='/ticketnew').text-muted  + создать новый
+			//br
+			.page-content.tile.ph-0.pv-2.mb-2
+				.panel-heading
+					span.entypo.entypo-help
+					|  Запросы и вопросы
+					if tickets.length
+						each ticket in tickets
+							if ticket
+								p.lead.ph-1 #{ticket.ticketId}
+								p.lead.ph-1 #{ticket.type}
+								p.lead.ph-1 #{ticket.status}
+								p.lead.ph-1 #{ticket.createdAt}
+								p.lead.ph-1 #{ticket.message}
+							else
+								h3.text-muted Нет запросов
+				br
+				a.btn-right.btn.btn-primary.btn-right(href='/ticketnew') Открыть запрос
+
+							

@@ -13,8 +13,6 @@ block content
 			pre.mb-2: code
 				if 'string' == typeof err
 					!= utils.textToHTML(err)
-				else
-					!= htmlStringify(err)
 
 		p Сообщите нам если видите эту ошибку 
 			a(href='mailto:service@toirus.ru', target='_blank') по этому адресу.

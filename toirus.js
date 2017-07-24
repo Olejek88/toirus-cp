@@ -7,6 +7,7 @@ var keystone = require('keystone'),
     i18n = require('i18n');
 var cons = require('consolidate');
 var nunjucks = require('nunjucks');
+var mongoose = require('mongoose');
 
 keystone.init({
 	'name': 'toirus-cp',
@@ -50,6 +51,13 @@ keystone.set('locals', {
 	editable: keystone.content.editable,
 });
 
+
+mongoose.set('server', {
+        socketOptions: {
+            keepAlive: 1
+        }});
+
+keystone.set('mongoose', mongoose);
 // Configure i18n
 /*
 i18n.configure({
@@ -64,7 +72,7 @@ keystone.set('routes', require('./routes'));
 keystone.set('nav', {
 	Пользователи: 'users',
 	Клиенты: 'clients',
-	Запросы: 'enquiries',
+	Запросы: 'tickets',
 	Журнал: 'logs',
 	Услуги: 'services',
 	Базы: 'databases',

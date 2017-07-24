@@ -13,14 +13,14 @@ exports.initLocals = function(req, res, next) {
 	//console.log (req.user);
 	if (req.user)
 	locals.navLinks = [
-		{ label: 'Аккаунт',	key: 'home',		href: '/' },		
+		{ label: 'Аккаунт',	key: 'home',		href: '/me' },		
 		{ label: 'Услуги',	key: 'services',	href: '/services' },
 		{ label: 'Платежи',	key: 'payments',	href: '/payments' },
 		{ label: 'Вопросы',	key: 'tickets',		href: '/tickets' },
 	];
 	else
 	locals.navLinks = [
-		{ label: 'Домой',			key: 'home',		href: '/' }
+		{ label: 'Домой',			key: 'home',		href: '/me' }
 	];
 	
 	locals.user = req.user;
