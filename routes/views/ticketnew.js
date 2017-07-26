@@ -44,7 +44,7 @@ exports = module.exports = function(req, res) {
 			updater.process(req.body, {
 				flashErrors: true,
 				logErrors: true,
-				fields: 'name,ticketType,message'
+				fields: 'name, message'
 			}, function(err) {
 				if (err) {
 					locals.validationErrors = err.errors;
