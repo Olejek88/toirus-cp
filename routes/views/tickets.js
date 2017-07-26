@@ -7,7 +7,7 @@ exports = module.exports = function(req, res) {
 	var view = new keystone.View(req, res),
 		locals = res.locals;
 	
-	view.query('tickets', Ticket.model.find().sort('updateAt'));
+	view.query('tickets', Ticket.model.find().sort('updateAt').sort('-createdAt'));
 	
 	view.render('site/tickets');
 	

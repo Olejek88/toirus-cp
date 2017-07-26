@@ -2,7 +2,7 @@ var keystone = require('keystone'),
 	_ = require('lodash'),
 	moment = require('moment'),
 	Ticket = keystone.list('Ticket');
-var randomip = require('random-ip');
+var dateFormat = require('dateformat');
 
 exports = module.exports = function(req, res) {
 	
@@ -18,86 +18,49 @@ exports = module.exports = function(req, res) {
 	var day = d.getDate();
 
 	view.on('render', function(next) {
-		locals.opts =Ticket.model.ticketType.options;
-		console.log(locals.opts.length);
+		//locals.opts =Ticket.model.ticketType;
+		//console.log(locals.opts.length);
 		next();
 	});
 
 	view.on('post', { action: 'ticket.add' }, function(next) {
-	
-		// handle form
-		var newTicket = new Ticket.model({
+		var ticketId = 1;		
+		Ticket.model.find().sort({'ticketId':-1})
+			.exec(function(err,data){
+			if(data[0] && data[0].ticketId)
+				ticketId = data[0].ticketId+1;
+			var newTicket = new Ticket.model({
+				ticketId: ticketId,
 				name: req.body.name,
-				ip: randomip('192.168.2.0', 24),
-				date_end: new Date(year + 1, month, day),
-				dbase: 'db12.toirus',
-				users_num: req.body.users_num,
-				tags_num: req.body.tags_num,
-				client: locals.user.client,
-				description: req.body.description
+				user: locals.user,
+				ticketType: req.body.ticketType,
+				ticketStatus: 'open',
+				message: req.body.message
 			}),
-
 			updater = newTicket.getUpdateHandler(req, res, {
-				errorMessage: 'Проблема с добавлением сервиса '
+				errorMessage: 'Проблема с открытием запроса'
 			});
-				
-		updater.process(req.body, {
-			flashErrors: true,
-			logErrors: true,
-			fields: 'name,dbase,users_num,tags_num,description'
-		}, function(err) {
-			if (err) {
-				locals.validationErrors = err.errors;
-			} else {
-				req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
-				return res.redirect('/me');
+
+			updater.process(req.body, {
+				flashErrors: true,
+				logErrors: true,
+				fields: 'name,ticketType,message'
+			}, function(err) {
+				if (err) {
+					locals.validationErrors = err.errors;
+				} else {
+					req.flash('success', 'Ваша запрос принят и будет обработан в течении ближайшего времени. Спасибо за выбор нашего сервиса!');
+					return res.redirect('/me');
 			}
 			next();
+			});	
 		});	
 	});
 	
 	view.on('init', function(next) {
-	
-		if (!_.has(req.query, 'disconnect')) return next();
-		
-		var serviceName = '';
-				
-		req.user.save(function(err) {
-		
-			if (err) {
-				req.flash('success', 'The service could not be disconnected, please try again.');
-				return next();
-			}
-			
-			req.flash('success', serviceName + ' has been successfully disconnected.');
-			return res.redirect('/me');
-		
-		});
-	
+	    next();
 	});
 	
-	view.on('post', { action: 'profile.password' }, function(next) {
-	
-		if (!req.body.password || !req.body.password_confirm) {
-			req.flash('error', 'Please enter a password.');
-			return next();
-		}
-	
-		req.user.getUpdateHandler(req).process(req.body, {
-			fields: 'password',
-			flashErrors: true
-		}, function(err) {
-		
-			if (err) {
-				return next();
-			}
-			
-			req.flash('success', 'Your changes have been saved.');
-			return next();
-		
-		});
-	
-	});
 	
 	view.render('site/ticketnew');	
-}
+};

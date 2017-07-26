@@ -5,7 +5,7 @@ var keystone = require('keystone');
 var Types = keystone.Field.Types;
 
 var Method = new keystone.List('Method',{
-  	autokey: { from: 'name', path: 'slug', unique: true },
+  	autokey: { from: 'name', path: 'slug', unique: true }
  });
   
  Method.add({

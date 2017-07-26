@@ -27,21 +27,13 @@ exports = module.exports = function(req, res) {
 
 			
 	view.on('post', { action: 'ticket.details' }, function(next) {
-		Ticket.model.find().sort({'ticketId':-1})
-			.exec(function(err,data){
-				if(data[0] && data[0].id)
-					doc.id = data[0].id+1;
-				else
-					doc.id = 1;
-				
-			})
 		Ticket.model.findOne()
 			.where("_id", new ObjectID(req.params.ticket))
 			.exec(function(err, ticket) {			
 				if (err) return res.err(err);
 				if (!ticket) return res.notfound('Запрос не найден');
 				ticket.getUpdateHandler(req).process(req.body, {
-					fields: 'ticketStatus, message',
+					fields: 'name, message',
 					flashErrors: true
 				}, function(err) {		
 	    			if (err) {
@@ -54,5 +46,5 @@ exports = module.exports = function(req, res) {
 			});
 	
 	});		
-	view.render('site/tickets');	
+	view.render('site/ticket');
 }

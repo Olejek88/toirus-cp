@@ -1,0 +1,75 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			p.lead Просмотр платежа
+		.page-content.tile.ph-0.pv-2.mb-2
+			.panel-heading
+				span.entypo.entypo-credit
+				|  #{payment.name}
+			br
+			table
+				tr
+					td
+						table
+							tr
+								if payment.status === 'new'
+									td.pl-1 
+										font.status-label.opened| не оплачен
+								if payment.status === 'no verified'
+									td.pl-1 
+										font.status-label.process| не подтвержден
+								if payment.status === 'verified'
+									td.pl-1 
+										font.status-label.closed| оплачен
+							tr
+								if payment.method
+									td.pl-1.tcenter #{payment.method}
+								else
+									td.pl-1.tcenter не определен
+							tr
+								td.pl-1.tcenter #{payment._.updatedAt.format('DD MMM YYYY hh:mm')}
+			br
+			.panel-heading
+			table
+				tr
+					td
+						table
+							tr
+								td.pl-3 ООО ИПК Технологии Энергоспережения
+							tr
+								td.pl-3 Челябинск, улица Постышева, 2
+							tr
+								td.pl-3 ИНН 7448125220
+							tr
+								td.pl-3 КПП 745301001
+					td
+					td.topr
+						table
+							tr
+								td.pl-3
+									#{payment.client.name}
+							tr
+								td.pl-3
+									#{payment.client.address}
+			br
+			.panel-heading
+			table
+				tr
+					td
+						table
+							thead
+								th.thac #
+								th.thac Название
+								th.thac Сумма
+							tr
+								td.pl-1 #{payment.paymentId}
+								td.pl-1 #{payment.name}
+								td.pl-1 #{payment.sum}
+block js
+	script(src='/js/views/ticket.js')

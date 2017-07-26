@@ -10,13 +10,14 @@ var Client = new keystone.List('Client',{
   
  Client.add({
 	name: { type: String, initial: true, default: '', required: true, label: 'Имя' },  
-	phone: { type: String, initial: true, default: '', required: true, label: 'Телефон' },  
+	phone: { type: String, initial: true, default: '', required: true, label: 'Телефон' },  	
+	address: { type: String, initial: true, default: '', required: true, label: 'Адрес' },  
 	description: { type: Types.Textarea, initial: true }, 
-	status: { type: Types.Select, initial: true, options: 'Активен, Отключен, Новый', default: 'Новый' },
+	status: { type: Types.Select, options: 'Активен, Отключен, Новый', default: 'Новый' },
 	method: { type: Types.Relationship, ref: 'Method', many: false },
 	//users: { type: Types.Relationship, ref: 'User', many: true },
 	balance: { type: Types.Number, default: '0'},  
-	createdBy: { type: Types.Relationship, ref: 'User', index: true, many: false },
+	createdBy: { type: Types.Relationship, ref: 'User', many: false },
 	createdAt: { type: Types.Datetime, default: Date.now },
 	updatedAt: { type: Types.Datetime, default: Date.now }
 });

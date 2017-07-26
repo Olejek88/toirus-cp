@@ -117,9 +117,21 @@ exports = module.exports = function (app) {
 	// Tickets
 	app.all('/tickets', routes.views.tickets);
 	app.all('/ticketnew', routes.views.ticketnew);
-	//app.all('/serviceedit', routes.views.serviceedit);
 	app.all('/ticket/:ticket', routes.views.ticket);
 	app.all('/ticket/:id', routes.views.ticket);
+
+	// Payments
+	app.all('/payments', routes.views.payments);
+	//app.all('/paymentnew', routes.views.paymentnew);
+	app.all('/payment/:payment', routes.views.payment);
+	app.all('/payment/:id', routes.views.payment);
+
+	// Clients
+	app.all('/clientnew', routes.views.clientnew);
+	app.all('/client', routes.views.client);
+
+	app.all('/contacts', routes.views.contacts);
+	app.all('/faq', routes.views.faq);
 
 	// API
 	//app.all('/api*', keystone.middleware.api);

@@ -15,9 +15,9 @@ footer.site-footer.site-footer--sticky: .container
 					h5.footer-heading Пользователям
 					ul
 						if user
-							li: a(href='/clients') Аккаунт
+							li: a(href='/me') Аккаунт
 							li: a(href='/payments') Транзакции
-							li: a(href='/account') Сводная
+							li: a(href='/client') Клиент
 							li: a(href='/services') Сервисы
 						else
 							li: a(href='/signin') Войти
@@ -29,4 +29,4 @@ footer.site-footer.site-footer--sticky: .container
 						li: a(href='/contacts') Контакты
 						li: a(href='/faq') Помощь
 	.row.footer-copyright
-		p Copyright &copy; 2017 ТОиРУС. Powered by <a href='http://keystonejs.com' rel='external'>KeystoneJS</a>.
+		p Copyright &copy; 2017 ТОиРУС. Работает на <a href='http://keystonejs.com' rel='external'>KeystoneJS</a>.

@@ -5,6 +5,9 @@ var Client = keystone.list('Client');
 var Service = keystone.list('Service');
 var User = keystone.list('User');
 var Ticket = keystone.list('Ticket');
+var Payment = keystone.list('Payment');
+
+var dateFormat = require('dateformat');
 
 exports = module.exports = function(req, res) {
 	
@@ -53,15 +56,30 @@ exports = module.exports = function(req, res) {
 	view.on('render', function(next) {
 		Ticket.model.find()
 		.where('user', req.user)
-		.where('ticketStatus','open')
+//		.where('ticketStatus','open')
+		.sort('-createdAt')
 		.exec(function(err, tickets) {
 			console.log(tickets.length);
 			if (err) return res.err(err);
 			locals.tickets = tickets;
+			//dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 			next();
 		});
 	});
-	
+
+	view.on('render', function(next) {
+		Payment.model.find()
+		.where('client', req.user.client)
+		.sort('-createdAt')
+		.exec(function(err, payments) {
+			console.log(payments.length);
+			if (err) return res.err(err);
+			locals.payments = payments;
+			//dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+			next();
+		});
+	});
+
 	view.on('post', { action: 'profile.details' }, function(next) {
 		req.user.getUpdateHandler(req).process(req.body, {
 			fields: 'name, email' ,

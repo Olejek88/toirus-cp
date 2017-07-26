@@ -31,17 +31,16 @@ block content
 				|  Сменить пароль
 			br
 			.ui-reveal.ph-1
-				.ui-reveal__initial
-					form(method='post', autocomplete='off')
-						input(type='hidden', name='action', value='profile.password')
-						h3 Сменить пароль
-						.form-group
-							label(for='change-passwordNew').sr-only Новый пароль
-							input(type='password', name='password', placeholder='Новый пароль', id='change-passwordNew').form-control
-						.form-group
-							label(for='change-passwordConfirm').sr-only Подтвердите
-							input(type='password', name='password_confirm', placeholder='Подтвердите пароль', id='signin-passwordConfirm').form-control
-						.form-group
-							button(type='submit', data-loading-text="Изменяем...").btn.btn-primary Сменить
+			.ui-reveal__initial
+			form(method='post', autocomplete='off')
+				input(type='hidden', name='action', value='profile.password')
+				.form-group.ph-1
+					label(for='change-passwordNew').sr-only Новый пароль
+					input(type='password', name='password', placeholder='Новый пароль', id='change-passwordNew').form-control
+				.form-group.ph-1
+					label(for='change-passwordConfirm').sr-only Подтвердите
+					input(type='password', name='password_confirm', placeholder='Подтвердите пароль', id='signin-passwordConfirm').form-control
+				.form-group.ph-1
+					button(type='submit', data-loading-text="Изменяем...").btn.btn-primary Сменить
 block js
 	script(src='/js/views/me.js')

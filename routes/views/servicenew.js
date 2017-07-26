@@ -1,7 +1,8 @@
 var keystone = require('keystone'),
 	_ = require('lodash'),
-	moment = require('moment'),
-	Service = keystone.list('Service');
+	Service = keystone.list('Service'),
+	Payment = keystone.list('Payment'),
+	Client = keystone.list('Client');
 var randomip = require('random-ip');
 
 exports = module.exports = function(req, res) {
@@ -34,7 +35,7 @@ exports = module.exports = function(req, res) {
 			updater = newService.getUpdateHandler(req, res, {
 				errorMessage: 'Проблема с добавлением сервиса '
 			});
-				
+
 		updater.process(req.body, {
 			flashErrors: true,
 			logErrors: true,
@@ -43,13 +44,48 @@ exports = module.exports = function(req, res) {
 			if (err) {
 				locals.validationErrors = err.errors;
 			} else {
+				var paymentId = 1;		
+				Payment.model.find().sort({'paymentId':-1})
+						.exec(function(err,data){
+						console.log(data[0]);
+						if(data[0] && data[0].paymentId)
+								paymentId = data[0].paymentId+1;
+						else
+								paymentId = 1;				
+						});
+				
+						var newPayment = new Payment.model({
+							name: 'Платеж за ' +  req.body.name + ' (годовой) от ' + Date.now(),
+							service: newService,
+							client: locals.user.client,
+							method: locals.user.client.method,
+							sum: req.body.users_num*100+req.body.tags_num*10+30000,
+							status: 'new'
+						}),
+								  
+						updater = newPayment.getUpdateHandler(req, res, {
+							errorMessage: 'Проблема с оформлением платежа'
+						});
+
+						updater.process(req.body, {
+							flashErrors: true,
+							logErrors: true,
+							fields: 'name,method,sum,status'
+						}, function(err) {
+							if (err) {
+								locals.validationErrors = err.errors;
+							} else {
+								//return res.redirect('/me');
+							}
+						next();
+					});			
 				req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
 				return res.redirect('/me');
 			}
 			next();
-		});	
+		});		
 	});
-	
+
 	view.on('init', function(next) {
 	
 		if (!_.has(req.query, 'disconnect')) return next();
@@ -70,29 +106,6 @@ exports = module.exports = function(req, res) {
 	
 	});
 	
-	view.on('post', { action: 'profile.password' }, function(next) {
-	
-		if (!req.body.password || !req.body.password_confirm) {
-			req.flash('error', 'Please enter a password.');
-			return next();
-		}
-	
-		req.user.getUpdateHandler(req).process(req.body, {
-			fields: 'password',
-			flashErrors: true
-		}, function(err) {
-		
-			if (err) {
-				return next();
-			}
-			
-			req.flash('success', 'Your changes have been saved.');
-			return next();
-		
-		});
-	
-	});
-	
 	view.render('site/servicenew');
 	
-}
+};

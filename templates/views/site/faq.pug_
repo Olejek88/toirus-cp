@@ -1,0 +1,51 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			p.lead Редактирование реквизитов клиента
+		.page-content.tile.ph-0.pv-2.mb-2
+			.panel-heading
+				span.entypo.entypo-new-message
+				|  #{client.name}
+			br
+			+flash-messages(messages)
+			form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal
+				//var id = #{client.method};
+				input(type='hidden', name='action', value='client.details')
+				input(type='hidden', name='_id', value=client._id)
+				.form-group.ph-1
+					label.col-sm-2.control-label Название
+					.col-sm-10: .form-row
+						.col-xs-6: input(type='text', name='name' value=client.name).form-control
+				.form-group.ph-1
+					label.col-sm-2.control-label Телефон
+					.col-sm-10: .form-row
+						.col-xs-6: input(type='text', name='phone' value=client.phone).form-control
+				.form-group.ph-1
+					label.col-sm-2.control-label Адрес
+					.col-sm-10: .form-row
+						.col-xs-6: input(type='text', name='address' value=client.address).form-control
+				.form-group.ph-1
+					label.col-sm-2.control-label Описание
+					textarea(name='description', class='wysiwyg', rows='6', cols='80').input.input-faded #{client.description}
+				.form-group.ph-1
+					label.col-sm-2.control-label Метод оплаты
+					.col-sm-10: .form-row
+						.col-xs-6
+						select(name='method').form-control
+							option(value='') (выберите)
+							each method in methods
+								//option(value=#{method.value}) #{method.name}
+								if method.id == client.method
+									option(value=method.id selected)= method.name
+								else
+									option(value=method.id)= method.name
+				.form-group.ph-2
+					button(type='submit', data-loading-text="Сохраняем...").btn.btn-primary.ph-1 Сохранить настройки
+block js
+	script(src='/js/views/service.js')

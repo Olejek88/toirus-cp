@@ -9,7 +9,7 @@ var Log = new keystone.List('Log',{
  });
   
  Log.add({
-       date: { type: Types.Datetime, initial: true, default: '', required: true },  
+       date: { type: Types.Datetime, initial: true, default: Date.now, required: true },  
        description: { type: String, initial: true, default: '', required: true },  
        user: { type: Types.Relationship, ref: 'User', index: true, many: false },
        createdAt: { type: Types.Datetime, default: Date.now },

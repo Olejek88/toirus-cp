@@ -22,31 +22,52 @@ block content
 				p.lead.ph-1 статус: не активен
 			if user.client
 				p.lead.ph-1 клиент: #{user.client.name}
-			//p.lead.ph-1 права доступа: #{user.roles}
+			//p.lead.ph-1 метод оплаты: #{user.client.method.name}
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-star
-				| Статистика аккаунта
+				|  Статистика аккаунта
 			br
 			p.lead.ph-1 количество сервисов (активных/всего): #{serviceactive}/#{servicecount}
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-bell
-				| Открытые тикеты
+				|  Открытые тикеты
+			br
 			if tickets
 				each ticket in tickets
 					if ticket
-						p.lead.ph-1 #{ticket.ticketId}
-						p.lead.ph-1 #{ticket.type}
-						p.lead.ph-1 #{ticket.status}
-						p.lead.ph-1 #{ticket.createdAt}
-						p.lead.ph-1 #{ticket.message}
+						p.lead.ph-1 #{ticket._.createdAt.format('DD MMM YYYY hh:mm:ss')} 
+							a(href='/ticket/' + ticket._id)|  ##{ticket.ticketId}
+							a(href='/ticket/' + ticket._id)|  #{ticket.name}
+							if ticket.ticketStatus === 'open'
+								font.status-label.opened| открыт
+							if ticket.ticketStatus === 'process'
+								font.status-label.process| в процессе
+							if ticket.ticketStatus === 'closed'
+								font.status-label.closed| закрыт
 			else
 				h3.text-muted Нет запросов
 		.page-content.tile.ph-0.pv-2.mb-2
 			.panel-heading
 				span.entypo.entypo-book
-				| Последние транзакции
+				|  Последние транзакции
 							
+			br
+			if payments
+				each payment in payments
+					if payment
+						p.lead.ph-1 #{payment._.createdAt.format('DD MMM YYYY hh:mm:ss')} 
+							a(href='/payment/' + payment._id)|  ##{payment.paymentId}
+							a(href='/payment/' + payment._id)|  #{payment.name}
+							if payment.status === 'new'
+								font.status-label.opened| не оплачен
+							if payment.status === 'no verified'
+								font.status-label.process| не подтвержден
+							if payment.status === 'verified'
+								font.status-label.closed| оплачен
+			else
+				h3.text-muted Нет
+
 block js
 	script(src='/js/views/me.js')

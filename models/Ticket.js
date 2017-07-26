@@ -7,7 +7,8 @@ var Ticket = new keystone.List('Ticket', {
 });
 
 Ticket.add({
-	ticketId: { type: Types.Number,  noedit: true},
+	ticketId: { type: Types.Number,  noedit: true, initial: true },
+	name: { type: String, required: true, initial:true},
 	user: { type: Types.Relationship, ref: 'User', many: false },
 	ticketType: { type: Types.Select, options: [
 		{ value: 'message', label: 'Сообщение администратору' },
@@ -30,14 +31,6 @@ Ticket.schema.pre('save', function(next) {
 		ticket.ticketStatus = 'open';
 	}
 	
-	Ticket.model.find().sort({'ticketId':-1})
-		.exec(function(err,data){
-		if(data[0] && data[0].id)
-			ticket.ticketId = data[0].id+1;
-		else
-			ticket.ticketId = 1;
-				
-	});
 	next();
 });
 
