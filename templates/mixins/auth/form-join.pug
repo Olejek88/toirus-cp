@@ -36,7 +36,7 @@ mixin form-join(args)
 				.form-groups
 					.form-group(class=!args.modal ? checkFormError('name') : null)
 						label(for='name').sr-only name
-						input(type='text', name='name', placeholder='Имя', value=!args.modal ? form.firstname : null).form-control.form-control--first
+						input(type='text', name='name', placeholder='Имя Фамилия', value=!args.modal ? form.firstname : null).form-control.form-control--first
 					.form-group(class=!args.modal ? checkFormError('email') : null)
 						label(for='email').sr-only Email
 						input(type='email', name='email', placeholder='Email', value=!args.modal ? form.email : null).form-control

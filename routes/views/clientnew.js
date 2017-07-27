@@ -1,9 +1,11 @@
 var keystone = require('keystone'),
 	_ = require('lodash'),
-	Payment = keystone.list('Payment'),
 	Log = keystone.list('Log'),
-	Client = keystone.list('Client');
-var randomip = require('random-ip');
+	Client = keystone.list('Client'),
+	User = keystone.list('User');
+
+var Method = keystone.list('Method');
+var ObjectID = require('mongodb').ObjectID;
 
 exports = module.exports = function(req, res) {
 	
@@ -18,76 +20,78 @@ exports = module.exports = function(req, res) {
 	var month = d.getMonth();
 	var day = d.getDate();
 
-	view.on('post', { action: 'client.add' }, function(next) {
-	
+	view.on('post', { action: 'client.add' }, function(next) {	
+		console.log("add");
+
 		var newClient = new Client.model({
 				name: req.body.name,
 				phone: req.body.phone,
+				address: req.body.address,
 				description: req.body.description,
-				status: 'new',
 				method: req.body.method,
 				createdBy: locals.user
 			}),
 
-			updater = newCleint.getUpdateHandler(req, res, {
+			updater = newClient.getUpdateHandler(req, res, {
 				errorMessage: 'Проблема с добавлением клиента '
 			});
 
+		console.log("updater");
 		updater.process(req.body, {
 			flashErrors: true,
 			logErrors: true,
-			fields: 'name,phone,status,method,createdBy,description'
+			fields: 'name,phone,address,description,method'
 		}, function(err) {
 			if (err) {
 				locals.validationErrors = err.errors;
 			} else {
+				console.log("+log");
+					
+				User.model.findOne()
+					.where("_id", new ObjectID(locals.user._id))
+					.exec(function(err, user) {		
+						if (err) return res.err(err);
+						if (user) {
+							user.client = newClient;
+							user.save(function (err, user) {
+								 if (err) { console.log(err); 
+								}
+							console.log('saved user: ', user);
+							});
+						}
+					});
+					
+				if (err) {
+					return next();
+	    			}
+
 				var newLog = new Log.model({
 					description: 'Создан клиент ' +  req.body.name,
 					user: locals.user
 				}),
-
-				updater = newPayment.getUpdateHandler(req, res, {
+				updater = newClient.getUpdateHandler(req, res, {
 					errorMessage: 'Проблема с добавлением в лог'
 				});
+				newLog.save(function (err, user) {
+						if (err) { console.log(err); }
+					});
 
-				updater.process(req.body, {
-					flashErrors: true,
-					logErrors: true,
-					fields: ''
-				}, function(err) {
-					if (err) {
-						locals.validationErrors = err.errors;
-					} else {
-						return res.redirect('/me');
-					}
-				next();
-				});			
-				return res.redirect('/me');
+				req.flash('success', 'Изменения сохранены');
+				return res.redirect('/client');
 			}
 			next();
 		});		
 	});
 
 	view.on('init', function(next) {
-	
-		if (!_.has(req.query, 'disconnect')) return next();
-		
-		var serviceName = '';
-				
-		req.user.save(function(err) {
-		
-			if (err) {
-				req.flash('success', 'The service could not be disconnected, please try again.');
-				return next();
-			}
-			
-			req.flash('success', serviceName + ' has been successfully disconnected.');
-			return res.redirect('/me');
-		
+		Method.model.find()
+		.exec(function(err, methods) {
+			if (err) return res.err(err);
+			//console.log(methods);
+			locals.methods = methods;
+			next();
 		});
-	
 	});
 	
-	view.render('site/servicenew');
-	
-}
+	view.render('site/clientnew');	
+};

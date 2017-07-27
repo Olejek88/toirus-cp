@@ -16,11 +16,12 @@ exports = module.exports = function(req, res) {
 	// load client
 	
 	view.on('init', function(next) {
-		Client.model.findOne()
-			.where("_id", new ObjectID(locals.user.client))
+		console.log(locals.user.client);
+		Client.model.findOne().where("_id", new ObjectID(locals.user.client))
 			.exec(function(err, client) {
 				if (err) return res.err(err);
-				if (!client) return res.notfound('Клиент не найден');
+				console.log(client);
+				if (!client) return res.redirect('/clientnew');
 				locals.client = client;
 				next();
 			});
