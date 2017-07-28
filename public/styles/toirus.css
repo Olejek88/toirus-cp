@@ -13,4 +13,5 @@
 .bold{font-weight:bold; }
 .bred{background-color:red; background-image: none; padding:.1em .2em .1em; border-radius: .25em;}
 .bgreen{background-color:green; background-image: none; padding:.1em .2em .1em; border-radius: .25em;}
+.no-wrap{white-space: nowrap}
 

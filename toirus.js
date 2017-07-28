@@ -1,12 +1,11 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 require('dotenv').config();
-// 
+//
 // Require keystone
-var keystone = require('keystone'),
-    i18n = require('i18n');
+var keystone = require('keystone');
+var i18n = require('i18n');
 var cons = require('consolidate');
-var nunjucks = require('nunjucks');
 var mongoose = require('mongoose');
 
 keystone.init({

@@ -19,6 +19,7 @@ exports = module.exports = function(req, res) {
 	var year = d.getFullYear();
 	var month = d.getMonth();
 	var day = d.getDate();
+	var nService;
 
 	view.on('post', { action: 'service.add' }, function(next) {
 	
@@ -37,6 +38,8 @@ exports = module.exports = function(req, res) {
 			updater = newService.getUpdateHandler(req, res, {
 				errorMessage: 'Проблема с добавлением сервиса '
 		});
+		
+		nService = newService;
 
 		updater.process(req.body, {
 			flashErrors: true,
@@ -51,7 +54,8 @@ exports = module.exports = function(req, res) {
 						.exec(function(err,data) {
 							if(data[0] && data[0].paymentId)
 								paymentId = data[0].paymentId+1;
-					
+							console.log(nService);
+							console.log(newService);
 							Client.model.findOne().where('_id', ObjectID(locals.user.client)).populate('method').exec(function(err, client) {
 								if (err) {
 									req.flash('error', 'Клиент не сконфигурирован');
@@ -62,7 +66,7 @@ exports = module.exports = function(req, res) {
 								new Payment.model({
 									paymentId: paymentId,
 									name: 'Платеж за ' +  req.body.name + ' (годовой)',
-									service: newService,
+									service: nService,
 								 	client: client,
 									method: client.method,
 									sum: req.body.users_num*100+req.body.tags_num*10+30000,

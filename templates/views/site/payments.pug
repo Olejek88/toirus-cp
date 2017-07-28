@@ -15,6 +15,7 @@ block content
 			table.pl-1
 				thead
 					tr
+						th.thac Счет#
 						th.thac Дата транзакции
 						th.thac Название
 						th.thac Метод оплаты
@@ -25,9 +26,10 @@ block content
 						each payment in payments
 							if payment
 								tr
-									td.pl-1 #{payment._.createdAt.format('DD MMM YYYY hh:mm:ss')}
 									td.pl-1 
 										a(href='/payment/' + payment._id)| ##{payment.paymentId}
+									td.pl-1.no-wrap #{payment._.createdAt.format('DD MMM YYYY hh:mm:ss')}
+									td.pl-1 
 										a(href='/payment/' + payment._id)|  #{payment.name}
 									td.pl-1
 										if payment.method

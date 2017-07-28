@@ -67,6 +67,33 @@ exports = module.exports = function(req, res) {
 	});
 
 	view.on('render', function(next) {
+		Ticket.model.find()
+		.where('user', req.user)
+//		.where('ticketStatus','open')
+		.count(function(err, count) {
+			if (err) return res.err(err);
+			locals.ticketscount = count;
+		});
+	    next();
+	});
+
+	view.on('render', function(next) {
+		var sum=0;
+		locals.balance = 0;
+		Payment.model.find()
+		.where('client', req.user.client)
+		.where('status', 'new')
+		.exec(function(err, payments) {
+			if (err) return res.err(err);
+			for (var index in payments) {
+				sum = sum + payments[index].sum;
+			}
+			locals.balance = sum * (-1);
+		});
+	    next();
+	});
+
+	view.on('render', function(next) {
 		Payment.model.find()
 		.where('client', req.user.client)
 		.sort('-createdAt')
@@ -76,6 +103,17 @@ exports = module.exports = function(req, res) {
 			//dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 			next();
 		});
+	});
+
+	view.on('render', function(next) {
+		Ticket.model.find()
+		.where('user', req.user)
+		.where('ticketStatus','open')
+		.count(function(err, count) {
+			if (err) return res.err(err);
+			locals.ticketsactive = count;
+		});
+	    next();
 	});
 
 	view.on('post', { action: 'profile.details' }, function(next) {

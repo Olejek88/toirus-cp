@@ -21,7 +21,7 @@ block content
 					if ticket
 						p.lead.ph-1 #{ticket._.createdAt.format('DD MMM YYYY hh:mm:ss')}
 							a(href='/ticket/' + ticket._id)|  ##{ticket.ticketId}
-							a(href='/ticket/' + ticket._id)|  ##{ticket.name}
+							a(href='/ticket/' + ticket._id)|  #{ticket.name}
 							if ticket.ticketStatus === 'open'
 								font.status-label.opened|  Открыт
 							if ticket.ticketStatus === 'process'

@@ -5,7 +5,7 @@ var keystone = require('keystone');
 var Types = keystone.Field.Types;
 
 var Payment = new keystone.List('Payment',{
-  	autokey: { from: 'name', path: 'slug', unique: true },
+  	autokey: { from: 'name', path: 'slug', unique: true }
  });
   
  Payment.add({
