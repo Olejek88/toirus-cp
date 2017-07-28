@@ -2,8 +2,10 @@ var keystone = require('keystone'),
 	_ = require('lodash'),
 	Service = keystone.list('Service'),
 	Payment = keystone.list('Payment'),
-	Client = keystone.list('Client');
+	Client = keystone.list('Client'),
+	Log = keystone.list('Log');
 var randomip = require('random-ip');
+var ObjectID = require('mongodb').ObjectID;
 
 exports = module.exports = function(req, res) {
 	
@@ -34,7 +36,7 @@ exports = module.exports = function(req, res) {
 
 			updater = newService.getUpdateHandler(req, res, {
 				errorMessage: 'Проблема с добавлением сервиса '
-			});
+		});
 
 		updater.process(req.body, {
 			flashErrors: true,
@@ -44,45 +46,44 @@ exports = module.exports = function(req, res) {
 			if (err) {
 				locals.validationErrors = err.errors;
 			} else {
-				var paymentId = 1;		
-				Payment.model.find().sort({'paymentId':-1})
-						.exec(function(err,data){
-						console.log(data[0]);
-						if(data[0] && data[0].paymentId)
+					var paymentId = 1;		
+					Payment.model.find().populate('client').populate('method').sort({'paymentId':-1})
+						.exec(function(err,data) {
+							if(data[0] && data[0].paymentId)
 								paymentId = data[0].paymentId+1;
-						else
-								paymentId = 1;				
-						});
-				
-						var newPayment = new Payment.model({
-							name: 'Платеж за ' +  req.body.name + ' (годовой) от ' + Date.now(),
-							service: newService,
-							client: locals.user.client,
-							method: locals.user.client.method,
-							sum: req.body.users_num*100+req.body.tags_num*10+30000,
-							status: 'new'
-						}),
-								  
-						updater = newPayment.getUpdateHandler(req, res, {
-							errorMessage: 'Проблема с оформлением платежа'
-						});
+					
+							Client.model.findOne().where('_id', ObjectID(locals.user.client)).populate('method').exec(function(err, client) {
+								if (err) {
+									req.flash('error', 'Клиент не сконфигурирован');
+									console.log('Клиент не сконфигурирован');
+									return next();
+								}
+								
+								new Payment.model({
+									paymentId: paymentId,
+									name: 'Платеж за ' +  req.body.name + ' (годовой)',
+									service: newService,
+								 	client: client,
+									method: client.method,
+									sum: req.body.users_num*100+req.body.tags_num*10+30000,
+									status: 'new'
+								}).save(function (err) {
+									if (err) { console.log(err); }
+								});
+							
+								new Log.model({
+									description: 'Пользователем ' + locals.user.name +  ' заказана услуга ' +  req.body.name,
+									user: locals.user
+								}).save(function (err) {
+									if (err) { console.log(err); }
+								});
 
-						updater.process(req.body, {
-							flashErrors: true,
-							logErrors: true,
-							fields: 'name,method,sum,status'
-						}, function(err) {
-							if (err) {
-								locals.validationErrors = err.errors;
-							} else {
-								//return res.redirect('/me');
-							}
-						next();
-					});			
-				req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
-				return res.redirect('/me');
-			}
-			next();
+								req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
+								return res.redirect('/servicenew');
+							});
+						});						
+				}
+			//next();
 		});		
 	});
 

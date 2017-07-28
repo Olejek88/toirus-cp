@@ -19,6 +19,7 @@ exports = module.exports = function(req, res) {
 		Payment.model.findOne()
 			.where("_id", new ObjectID(req.params.payment))
 			.populate('client')
+			.populate('method')
 			.exec(function(err, payment) {
 				if (err) return res.err(err);
 				if (!payment) return res.notfound('Платеж не найден');

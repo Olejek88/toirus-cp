@@ -59,7 +59,6 @@ exports = module.exports = function(req, res) {
 //		.where('ticketStatus','open')
 		.sort('-createdAt')
 		.exec(function(err, tickets) {
-			console.log(tickets.length);
 			if (err) return res.err(err);
 			locals.tickets = tickets;
 			//dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
@@ -72,7 +71,6 @@ exports = module.exports = function(req, res) {
 		.where('client', req.user.client)
 		.sort('-createdAt')
 		.exec(function(err, payments) {
-			console.log(payments.length);
 			if (err) return res.err(err);
 			locals.payments = payments;
 			//dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
@@ -100,19 +98,11 @@ exports = module.exports = function(req, res) {
 	view.on('init', function(next) {
 	
 		if (!_.has(req.query, 'disconnect')) return next();
-		console.log('init');
 		
 		var serviceName = '';
-		/*
-		Client.model.findOne()
-			.where("_id", new ObjectID(req.user.client))
-			.exec(function(err, client) {			
-				if (err) return res.err(err);
-				if (client) 
-			});*/
 		keystone.list('User').model.findOne().populate('client', function (err, doc) {
-			console.log(doc.client.name); // Joe
-			console.log(doc.populated('client'));  // '1234af9876b024c680d111a1' -> _id
+			console.log(doc.client.name);
+			console.log(doc.populated('client'));
 		});
 		keystone.list('Client').model.findOne( {_id:user.client} , function(err, item) { console.log(item);  });
 
@@ -167,4 +157,4 @@ exports = module.exports = function(req, res) {
 	
 	view.render('site/me');
 	
-}
+};

@@ -29,11 +29,11 @@ block content
 										font.status-label.closed| оплачен
 							tr
 								if payment.method
-									td.pl-1.tcenter #{payment.method}
+									td.pl-1.tcenter #{payment.method.name}
 								else
 									td.pl-1.tcenter не определен
 							tr
-								td.pl-1.tcenter #{payment._.updatedAt.format('DD MMM YYYY hh:mm')}
+								td.pl-1 #{payment._.updatedAt.format('DD MMM YYYY hh:mm')}
 			br
 			.panel-heading
 			table
@@ -53,10 +53,10 @@ block content
 						table
 							tr
 								td.pl-3
-									#{payment.client.name}
+									|#{payment.client.name}
 							tr
 								td.pl-3
-									#{payment.client.address}
+									|#{payment.client.address}
 			br
 			.panel-heading
 			table.pl-3

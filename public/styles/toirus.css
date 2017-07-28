@@ -1,6 +1,6 @@
 .panel-heading{color:#525252;text-decoration:none;font-weight:200;padding:8px 10px;background-color:lightblue; border-bottom:1px; solid:#e2e1e1}
 .green{font-color:green;}
-.btn-right{float:right; margin-right:10px; padding:0px; margin-bottom: 10px; }
+.btn-right{float:right; margin-right:10px; padding:0px; margin-bottom: 10px; padding:.1em .2em .1em; }
 .status-label{padding:.1em .6em .1em; text-align:center; border-radius: .25em; margin: .2em .6em .3em; white-space: nowrap}
 .opened{background-color:red; color:#fff;}
 .closed{background-color:#4caf50; color:#fff;}
@@ -11,6 +11,6 @@
 .tcenter{text-align:center; }
 .topr{vertical-align:top; valign:top; }
 .bold{font-weight:bold; }
-.bred{background-color:red; background-image: none; }
-.bgreen{background-color:green; background-image: none; }
+.bred{background-color:red; background-image: none; padding:.1em .2em .1em; border-radius: .25em;}
+.bgreen{background-color:green; background-image: none; padding:.1em .2em .1em; border-radius: .25em;}
 

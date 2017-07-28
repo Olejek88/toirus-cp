@@ -133,6 +133,11 @@ exports = module.exports = function (app) {
 	app.all('/contacts', routes.views.contacts);
 	app.all('/faq', routes.views.faq);
 
+	// Logs
+	app.all('/logs', routes.views.logs);
+
+	app.all('/agreement', routes.views.agreement);
+
 	// API
 	//app.all('/api*', keystone.middleware.api);
 	//app.all('/api/me/meetup', routes.api.me.meetup);

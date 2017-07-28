@@ -17,9 +17,11 @@ block content
 			br
 			p.lead.ph-1 e-mail: #{user.email}
 			if user.status		
-				p.lead.green.ph-1 статус: активен
+				p.lead.ph-1 статус: 
+					font.bgreen активен
 			else
-				p.lead.ph-1 статус: не активен
+				p.lead.ph-1 статус: 
+					font.bred не активен
 			if user.client
 				p.lead.ph-1 клиент: #{user.client.name}
 			a(href='/meedit') 

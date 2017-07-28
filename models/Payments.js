@@ -29,18 +29,7 @@ Payment.schema.pre('save', function(next) {
 	var payment = this;
 	if (!payment.status) {
 		payment.status = 'new';
-	}
-	
-	console.log("pre");
-	Payment.model.find().sort({'paymentId':-1})
-		.exec(function(err,data){
-			console.log(data[0]);
-			if(data[0] && data[0].paymentId)
-				payment.paymentId = data[0].paymentId+1;
-			else
-				payment.paymentId = 1;
-				
-	});
+	}	
 	next();
 });
 

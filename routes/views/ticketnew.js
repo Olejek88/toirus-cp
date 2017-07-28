@@ -1,7 +1,8 @@
 var keystone = require('keystone'),
 	_ = require('lodash'),
 	moment = require('moment'),
-	Ticket = keystone.list('Ticket');
+	Ticket = keystone.list('Ticket'),
+	Log = keystone.list('Log');
 var dateFormat = require('dateformat');
 
 exports = module.exports = function(req, res) {
@@ -49,8 +50,15 @@ exports = module.exports = function(req, res) {
 				if (err) {
 					locals.validationErrors = err.errors;
 				} else {
+					new Log.model({
+						description: 'Пользователь ' + locals.user.name +  ' создал запрос ' +  req.body.name,
+						user: locals.user
+						}).save(function (err) {
+							if (err) { console.log(err); }
+					});
+
 					req.flash('success', 'Ваша запрос принят и будет обработан в течении ближайшего времени. Спасибо за выбор нашего сервиса!');
-					return res.redirect('/me');
+					return res.redirect('/ticketnew');
 			}
 			next();
 		    });

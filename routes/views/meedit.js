@@ -71,6 +71,5 @@ exports = module.exports = function(req, res) {
 	
 	});
 	
-	view.render('site/meedit');
-	
-}
+	view.render('site/meedit');	
+};

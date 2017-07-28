@@ -56,3 +56,7 @@ User.schema.methods.resetPassword = function(callback) {
  */
 User.defaultColumns = 'name, email, password, status, uuid, isAdmin';
 User.register();
+
+//var ClientUser = new keystone.List('ClientUser', { inherits: Clients });
+//ClientUser .add({ client: { type: , readonly: true } });
+//ChildPage.register();

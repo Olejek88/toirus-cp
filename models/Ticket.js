@@ -7,20 +7,20 @@ var Ticket = new keystone.List('Ticket', {
 });
 
 Ticket.add({
-	ticketId: { type: Types.Number,  noedit: true, initial: true },
-	name: { type: String, required: true, initial:true},
-	user: { type: Types.Relationship, ref: 'User', many: false },
+	ticketId: { type: Types.Number,  noedit: true, initial: true, label:  'Идентификатор' },
+	name: { type: String, required: true, initial:true, label: 'Название' },
+	user: { type: Types.Relationship, ref: 'User', many: false, label: 'Пользователь' },
 	ticketType: { type: Types.Select, options: [
 		{ value: 'message', label: 'Сообщение администратору' },
 		{ value: 'question', label: 'Вопрос по работе сервиса'},
 		{ value: 'other', label: 'Что-то другое...' }
-	] },
+	], label: 'Тип запроса' },
 	ticketStatus: { type: Types.Select, options: [
 		{ value: 'open', label: 'Открыт' },
 		{ value: 'process', label: 'В процессе' },
 		{ value: 'closed', label: 'Закрыт'}
-	] },
-	message: { type: Types.Text, required: true },
+	], label: 'Статус запроса' },
+	message: { type: Types.Text, required: true, label: 'Сообщение' },
 	createdAt: { type: Types.Datetime, default: Date.now },
 	updatedAt: { type: Types.Datetime, default: Date.now }
 });

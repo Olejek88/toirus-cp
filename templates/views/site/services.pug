@@ -19,12 +19,15 @@ block content
 							- var id = server._id;
 							span.entypo.entypo-cog
 							if server.status
-								|  #{server.name} (активен) 
-								| [ 
+								|  #{server.name} 
+								font.bgreen активен
+								|  [ 
 								a(href='/service/' + id).text-muted перейти к управлению
 								| ]
 							else
-								|  #{server.name} (не активен) [ 
+								|  #{server.name} 
+								font.bred не активен
+								|   [ 
 								a(href='/service/' + id).text-muted перейти к управлению
 								|  ]
 						br

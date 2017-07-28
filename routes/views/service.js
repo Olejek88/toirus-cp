@@ -2,6 +2,7 @@ var keystone = require('keystone'),
 	_ = require('lodash'),
 	moment = require('moment');
 var Service = keystone.list('Service');
+var Log = keystone.list('Log');
 var ObjectID = require('mongodb').ObjectID;
 
 exports = module.exports = function(req, res) {
@@ -16,11 +17,9 @@ exports = module.exports = function(req, res) {
 	
 	view.on('init', function(next) {
 		console.log ("init");
-		console.log (req.params.service);
 		Service.model.findOne()
 			.where("_id", new ObjectID(req.params.service))
-			.exec(function(err, service) {
-				
+			.exec(function(err, service) {				
 				if (err) return res.err(err);
 				if (!service) return res.notfound('Сервис не найден');
 				console.log(service.name);
@@ -50,5 +49,21 @@ exports = module.exports = function(req, res) {
 			});
 	
 	});		
+	
+	view.on('post', { action: 'service.delete' }, function(next) {
+		console.log('post');
+		Service.model.findOne()
+			.where("_id", new ObjectID(req.params.service))
+			.remove(function(err) {
+					new Log.model({
+						description: 'Пользователем ' + locals.user.name +  ' удалена услуга ',
+						user: locals.user
+					}).save(function (err) {
+					if (err) { console.log(err); }
+				});
+				return res.redirect('/services');
+			});
+	});		
+	
 	view.render('site/service');	
-}
+};
