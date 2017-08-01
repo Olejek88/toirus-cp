@@ -1,23 +1,23 @@
-var keystone = require('keystone'),
-	_ = require('lodash'),
-	moment = require('moment');
-var Ticket = keystone.list('Ticket');
-var ObjectID = require('mongodb').ObjectID;
+const keystone = require('keystone');
+const _ = require('lodash');
+const moment = require('moment');
 
-exports = module.exports = function(req, res) {
-	
-	var view = new keystone.View(req, res),
+const Ticket = keystone.list('Ticket');
+const ObjectID = require('mongodb').ObjectID;
+
+exports = module.exports = function (req, res) {
+	let view = new keystone.View(req, res),
 		locals = res.locals;
-	
+
 	locals.section = 'tickets';
 	locals.page.title = 'Запрос';
-		
+
 	// load the service
-	
-	view.on('init', function(next) {
+
+	view.on('init', (next) => {
 		Ticket.model.findOne()
-			.where("_id", new ObjectID(req.params.ticket))
-			.exec(function(err, ticket) {				
+			.where('_id', new ObjectID(req.params.ticket))
+			.exec((err, ticket) => {
 				if (err) return res.err(err);
 				if (!ticket) return res.notfound('Запрос не найден');
 				locals.ticket = ticket;
@@ -25,55 +25,53 @@ exports = module.exports = function(req, res) {
 			});
 	});
 
-			
-	view.on('post', { action: 'ticket.details' }, function(next) {
+
+	view.on('post', { action: 'ticket.details' }, (next) => {
 		Ticket.model.findOne()
-			.where("_id", new ObjectID(req.params.ticket))
-			.exec(function(err, ticket) {			
+			.where('_id', new ObjectID(req.params.ticket))
+			.exec((err, ticket) => {
 				if (err) return res.err(err);
 				if (!ticket) return res.notfound('Запрос не найден');
 				ticket.getUpdateHandler(req).process(req.body, {
 					fields: 'name, message',
-					flashErrors: true
-				}, function(err) {		
+					flashErrors: true,
+				}, (err) => {
 	    			if (err) {
 					return next();
-	    			}			
-				req.flash('success', 'Изменения сохранены');
-				//return next();
-				return res.redirect('/tickets');
+	    			}
+					req.flash('success', 'Изменения сохранены');
+				// return next();
+					return res.redirect('/tickets');
 				});
 			});
-	
-	});		
+	});
 
-	view.on('post', { action: 'ticket.delete' }, function(next) {
+	view.on('post', { action: 'ticket.delete' }, (next) => {
 		Ticket.model.findOne()
-			.where("_id", new ObjectID(req.params.ticket))
-			.remove(function(err) {
+			.where('_id', new ObjectID(req.params.ticket))
+			.remove(err =>
 				// post has been deleted
-				return res.redirect('/tickets');
-			});
-	});		
+   res.redirect('/tickets'));
+	});
 
-	view.on('post', { action: 'ticket.close' }, function(next) {
+	view.on('post', { action: 'ticket.close' }, (next) => {
 		Ticket.model.findOne()
-			.where("_id", new ObjectID(req.params.ticket))
-			.exec(function(err, ticket) {			
+			.where('_id', new ObjectID(req.params.ticket))
+			.exec((err, ticket) => {
 				if (err) return res.err(err);
 				if (!ticket) return res.notfound('Запрос не найден');
 				console.log(req.params.ticket);
 				console.log(req.params.ticketStatus);
 				ticket.getUpdateHandler(req).process(req.body, {
 					fields: 'ticketStatus',
-					flashErrors: true
-				}, function(err) {		
+					flashErrors: true,
+				}, (err) => {
 	    			if (err) {
 					return next();
-	    			}			
-				req.flash('success', 'Изменения сохранены');
-				//return next();
-				return res.redirect('/tickets');
+	    			}
+					req.flash('success', 'Изменения сохранены');
+				// return next();
+					return res.redirect('/tickets');
 				});
 			});
 	});

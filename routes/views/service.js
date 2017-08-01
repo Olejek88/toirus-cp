@@ -1,25 +1,25 @@
-var keystone = require('keystone'),
-	_ = require('lodash'),
-	moment = require('moment');
-var Service = keystone.list('Service');
-var Log = keystone.list('Log');
-var ObjectID = require('mongodb').ObjectID;
+const keystone = require('keystone');
+const _ = require('lodash');
+const moment = require('moment');
 
-exports = module.exports = function(req, res) {
-	
-	var view = new keystone.View(req, res),
+const Service = keystone.list('Service');
+const Log = keystone.list('Log');
+const ObjectID = require('mongodb').ObjectID;
+
+exports = module.exports = function (req, res) {
+	let view = new keystone.View(req, res),
 		locals = res.locals;
-	
+
 	locals.section = 'service';
 	locals.page.title = 'ТОиРУС настройки сервиса';
-		
+
 	// load the service
-	
-	view.on('init', function(next) {
-		console.log ("init");
+
+	view.on('init', (next) => {
+		console.log('init');
 		Service.model.findOne()
-			.where("_id", new ObjectID(req.params.service))
-			.exec(function(err, service) {				
+			.where('_id', new ObjectID(req.params.service))
+			.exec((err, service) => {
 				if (err) return res.err(err);
 				if (!service) return res.notfound('Сервис не найден');
 				console.log(service.name);
@@ -28,42 +28,41 @@ exports = module.exports = function(req, res) {
 			});
 	});
 
-			
-	view.on('post', { action: 'service.details' }, function(next) {
+
+	view.on('post', { action: 'service.details' }, (next) => {
 		Service.model.findOne()
-			.where("_id", new ObjectID(req.params.service))
-			.exec(function(err, service) {			
+			.where('_id', new ObjectID(req.params.service))
+			.exec((err, service) => {
 				if (err) return res.err(err);
 				if (!service) return res.notfound('Сервис не найден');
 				service.getUpdateHandler(req).process(req.body, {
 					fields: 'name, description, users_num, tags_num',
-					flashErrors: true
-				}, function(err) {		
+					flashErrors: true,
+				}, (err) => {
 	    			if (err) {
 					return next();
-	    			}			
-				req.flash('success', 'Изменения сохранены');
-				//return next();
-				return res.redirect('/me');
+	    			}
+					req.flash('success', 'Изменения сохранены');
+				// return next();
+					return res.redirect('/me');
 				});
 			});
-	
-	});		
-	
-	view.on('post', { action: 'service.delete' }, function(next) {
+	});
+
+	view.on('post', { action: 'service.delete' }, (next) => {
 		console.log('post');
 		Service.model.findOne()
-			.where("_id", new ObjectID(req.params.service))
-			.remove(function(err) {
-					new Log.model({
-						description: 'Пользователем ' + locals.user.name +  ' удалена услуга ',
-						user: locals.user
-					}).save(function (err) {
+			.where('_id', new ObjectID(req.params.service))
+			.remove((err) => {
+				new Log.model({
+					description: `Пользователем ${locals.user.name} удалена услуга `,
+					user: locals.user,
+				}).save((err) => {
 					if (err) { console.log(err); }
 				});
 				return res.redirect('/services');
 			});
-	});		
-	
-	view.render('site/service');	
+	});
+
+	view.render('site/service');
 };

@@ -1,25 +1,24 @@
-var keystone = require('keystone'),
-	User = keystone.list('User');
+const keystone = require('keystone');
 
-exports = module.exports = function(req, res) {
-	
-	var view = new keystone.View(req, res),
+const User = keystone.list('User');
+
+exports = module.exports = function (req, res) {
+	let view = new keystone.View(req, res),
 		locals = res.locals;
-	
-	view.on('post', { action: 'forgot-password' }, function(next) {
-		
+
+	view.on('post', { action: 'forgot-password' }, (next) => {
 		if (!req.body.email) {
-			req.flash('error', "Пожалуйста введите е-мэйл адрес.");
+			req.flash('error', 'Пожалуйста введите е-мэйл адрес.');
 			return next();
 		}
 
-		User.model.findOne().where('email', req.body.email).exec(function(err, user) {
+		User.model.findOne().where('email', req.body.email).exec((err, user) => {
 			if (err) return next(err);
 			if (!user) {
-				req.flash('error', "Извините, но мы не можем найти данный адрес.");
+				req.flash('error', 'Извините, но мы не можем найти данный адрес.');
 				return next();
 			}
-			user.resetPassword(function(err) {
+			user.resetPassword((err) => {
 				// if (err) return next(err);
 				if (err) {
 					console.error('===== ERROR sending reset password email =====');
@@ -32,9 +31,7 @@ exports = module.exports = function(req, res) {
 				}
 			});
 		});
-		
 	});
-	
+
 	view.render('session/forgot-password');
-	
-}
+};

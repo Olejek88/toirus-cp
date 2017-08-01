@@ -1,97 +1,98 @@
-var keystone = require('keystone'),
-	_ = require('lodash'),
-	Log = keystone.list('Log'),
-	Client = keystone.list('Client'),
-	User = keystone.list('User');
+const keystone = require('keystone');
+const _ = require('lodash');
 
-var Method = keystone.list('Method');
-var ObjectID = require('mongodb').ObjectID;
+const Log = keystone.list('Log');
+const Client = keystone.list('Client');
+User = keystone.list('User');
 
-exports = module.exports = function(req, res) {
-	
-	var view = new keystone.View(req, res),
+const Method = keystone.list('Method');
+const ObjectID = require('mongodb').ObjectID;
+
+exports = module.exports = function (req, res) {
+	let view = new keystone.View(req, res),
 		locals = res.locals;
-	
+
 	locals.section = 'clientnew';
 	locals.page.title = 'Создание клиента ТОиРУС';
 
-	var d = new Date();
-	var year = d.getFullYear();
-	var month = d.getMonth();
-	var day = d.getDate();
+	const d = new Date();
+	const year = d.getFullYear();
+	const month = d.getMonth();
+	const day = d.getDate();
 
-	view.on('post', { action: 'client.add' }, function(next) {	
-		console.log("add");
+	view.on('post', { action: 'client.add' }, (next) => {
+		console.log('add');
 
-		var newClient = new Client.model({
+		let newClient = new Client.model({
 				name: req.body.name,
 				phone: req.body.phone,
 				address: req.body.address,
 				description: req.body.description,
 				method: req.body.method,
-				createdBy: locals.user
+				createdBy: locals.user,
 			}),
 
 			updater = newClient.getUpdateHandler(req, res, {
-				errorMessage: 'Проблема с добавлением клиента '
+				errorMessage: 'Проблема с добавлением клиента ',
 			});
 
-		console.log("updater");
+		console.log('updater');
 		updater.process(req.body, {
 			flashErrors: true,
 			logErrors: true,
-			fields: 'name,phone,address,description,method'
-		}, function(err) {
+			fields: 'name,phone,address,description,method',
+		}, (err) => {
 			if (err) {
 				locals.validationErrors = err.errors;
 			} else {
-				console.log("+log");
-					
+				console.log('+log');
+
 				User.model.findOne()
-					.where("_id", new ObjectID(locals.user._id))
-					.exec(function(err, user) {		
+					.where('_id', new ObjectID(locals.user._id))
+					.exec((err, user) => {
 						if (err) return res.err(err);
 						if (user) {
 							user.client = newClient;
-							user.save(function (err, user) {
-								 if (err) { console.log(err); 
+							user.save((err, user) => {
+								 if (err) {
+									console.log(err);
 								}
-							console.log('saved user: ', user);
+								console.log('saved user: ', user);
 							});
 						}
 					});
-					
+
 				if (err) {
 					return next();
 	    			}
 
-				var newLog = new Log.model({
-					description: 'Создан клиент ' +  req.body.name,
-					user: locals.user
-				}),
-				updater = newClient.getUpdateHandler(req, res, {
-					errorMessage: 'Проблема с добавлением в лог'
-				});
-				newLog.save(function (err, user) {
-						if (err) { console.log(err); }
+				let newLog = new Log.model({
+						description: `Создан клиент ${req.body.name}`,
+						user: locals.user,
+					}),
+					updater = newClient.getUpdateHandler(req, res, {
+						errorMessage: 'Проблема с добавлением в лог',
 					});
+				newLog.save((err, user) => {
+					if (err) { console.log(err); }
+				});
 
 				req.flash('success', 'Изменения сохранены');
 				return res.redirect('/client');
 			}
 			next();
-		});		
+		});
 	});
 
-	view.on('init', function(next) {
+	view.on('init', (next) => {
 		Method.model.find()
-		.exec(function(err, methods) {
+		.exec((err, methods) => {
 			if (err) return res.err(err);
-			//console.log(methods);
+			// console.log(methods);
 			locals.methods = methods;
 			next();
 		});
 	});
-	
-	view.render('site/clientnew');	
+
+	view.render('site/clientnew');
 };

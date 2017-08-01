@@ -1,47 +1,48 @@
-var babelify = require('babelify');
-var bodyParser = require('body-parser');
-var browserify = require('browserify-middleware');
-//var clientConfig = require('../client/config');
-var keystone = require('keystone');
-var middleware = require('./middleware');
-//var graphqlHTTP = require('express-graphql');
-//var graphQLSchema = require('../graphql/basicSchema').default;
-//var relaySchema = require('../graphql/relaySchema').default;
+const babelify = require('babelify');
+const bodyParser = require('body-parser');
+const browserify = require('browserify-middleware');
+// var clientConfig = require('../client/config');
+const keystone = require('keystone');
+const middleware = require('./middleware');
+// var graphqlHTTP = require('express-graphql');
+// var graphQLSchema = require('../graphql/basicSchema').default;
+// var relaySchema = require('../graphql/relaySchema').default;
 
 exports.packages = [
-	'lodash'
+	'lodash',
 ];
 
 
-var importRoutes = keystone.importer(__dirname);
+const importRoutes = keystone.importer(__dirname);
 
 // Common Middleware
 keystone.pre('routes', middleware.initErrorHandlers);
 keystone.pre('routes', middleware.initLocals);
-//keystone.pre('routes', middleware.loadSponsors);
+// keystone.pre('routes', middleware.loadSponsors);
 keystone.pre('render', middleware.flashMessages);
 
 // Handle 404 errors
-keystone.set('404', function (req, res, next) {
+keystone.set('404', (req, res, next) => {
 	res.notfound();
 });
 
 // Handle other errors
-keystone.set('500', function (err, req, res, next) {
-	var title, message;
+keystone.set('500', (err, req, res, next) => {
+	let title,
+		message;
 	if (err instanceof Error) {
 		message = err.message;
 		err = err.stack;
 	}
 	res.status(500).render('errors/500', {
-		err: err,
+		err,
 		errorTitle: title,
-		errorMsg: message
+		errorMsg: message,
 	});
 });
 
 // Load Routes
-var routes = {
+const routes = {
 //	api: importRoutes('./api'),
 	views: importRoutes('./views'),
 	auth: importRoutes('./auth'),
@@ -49,22 +50,21 @@ var routes = {
 
 // Bind Routes
 exports = module.exports = function (app) {
-
 	// Browserification
 	/*
 	app.get('/js/packages.js', browserify(clientConfig.packages, {
 		cache: true,
 		precompile: true,
-	}));*/
+	})); */
 
 	// GraphQL
-	//app.use('/api/graphql', graphqlHTTP({ schema: graphQLSchema, graphiql: true }));
-	//app.use('/api/relay', graphqlHTTP({ schema: relaySchema, graphiql: true }));
+	// app.use('/api/graphql', graphqlHTTP({ schema: graphQLSchema, graphiql: true }));
+	// app.use('/api/relay', graphqlHTTP({ schema: relaySchema, graphiql: true }));
 
 	// Allow cross-domain requests (development only)
 	if (process.env.NODE_ENV !== 'production') {
 		console.log('Notice: Enabling CORS for development.');
-		app.all('*', function (req, res, next) {
+		app.all('*', (req, res, next) => {
 			res.header('Access-Control-Allow-Origin', '*');
 			res.header('Access-Control-Allow-Methods', 'GET, POST');
 			res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -74,21 +74,21 @@ exports = module.exports = function (app) {
 
 	// Website
 	app.get('/', routes.views.index);
-	//app.get('/meetups', routes.views.meetups);
-	//app.get('/meetups/:meetup', routes.views.meetup);
-	//app.get('/members', routes.views.members);
-	//app.get('/members/mentors', routes.views.mentors);
-	//app.get('/member/:member', routes.views.member);
-	//app.get('/organisations', routes.views.organisations);
-	//app.get('/links', routes.views.links);
-	//app.get('/links/:tag?', routes.views.links);
-	//app.all('/links/link/:link', routes.views.link);
-	//app.get('/blog/:category?', routes.views.blog);
-	//app.all('/blog/post/:post', routes.views.post);
-	//app.get('/about', routes.views.about);
-	//app.get('/mentoring', routes.views.mentoring);
+	// app.get('/meetups', routes.views.meetups);
+	// app.get('/meetups/:meetup', routes.views.meetup);
+	// app.get('/members', routes.views.members);
+	// app.get('/members/mentors', routes.views.mentors);
+	// app.get('/member/:member', routes.views.member);
+	// app.get('/organisations', routes.views.organisations);
+	// app.get('/links', routes.views.links);
+	// app.get('/links/:tag?', routes.views.links);
+	// app.all('/links/link/:link', routes.views.link);
+	// app.get('/blog/:category?', routes.views.blog);
+	// app.all('/blog/post/:post', routes.views.post);
+	// app.get('/about', routes.views.about);
+	// app.get('/mentoring', routes.views.mentoring);
 
-	//app.get('/showbag', routes.views.showbag);
+	// app.get('/showbag', routes.views.showbag);
 
 	// Session
 	app.all('/join', routes.views.session.join);
@@ -106,11 +106,11 @@ exports = module.exports = function (app) {
 	app.all('/me*', middleware.requireUser);
 	app.all('/me', routes.views.me);
 	app.all('/meedit', routes.views.meedit);
-	
+
 	// Services
 	app.all('/services', routes.views.services);
 	app.all('/servicenew', routes.views.servicenew);
-	//app.all('/serviceedit', routes.views.serviceedit);
+	// app.all('/serviceedit', routes.views.serviceedit);
 	app.all('/service/:service', routes.views.service);
 	app.all('/service/:id', routes.views.service);
 
@@ -122,7 +122,7 @@ exports = module.exports = function (app) {
 
 	// Payments
 	app.all('/payments', routes.views.payments);
-	//app.all('/paymentnew', routes.views.paymentnew);
+	// app.all('/paymentnew', routes.views.paymentnew);
 	app.all('/payment/:payment', routes.views.payment);
 	app.all('/payment/:id', routes.views.payment);
 
@@ -139,18 +139,17 @@ exports = module.exports = function (app) {
 	app.all('/agreement', routes.views.agreement);
 
 	// API
-	//app.all('/api*', keystone.middleware.api);
-	//app.all('/api/me/meetup', routes.api.me.meetup);
-	//app.all('/api/stats', routes.api.stats);
-	//app.all('/api/meetup/:id', routes.api.meetup);
+	// app.all('/api*', keystone.middleware.api);
+	// app.all('/api/me/meetup', routes.api.me.meetup);
+	// app.all('/api/stats', routes.api.stats);
+	// app.all('/api/meetup/:id', routes.api.meetup);
 
 	// API - App
-	//app.all('/api/app/status', routes.api.app.status);
-	//app.all('/api/app/rsvp', routes.api.app.rsvp);
-	//app.all('/api/app/signin-email', routes.api.app['signin-email']);
-	//app.all('/api/app/signup-email', routes.api.app['signup-email']);
-	//app.all('/api/app/signin-service', routes.api.app['signin-service']);
-	//app.all('/api/app/signin-service-check', routes.api.app['signin-service-check']);
-	//app.all('/api/app/signin-recover', routes.api.app['signin-recover']);
-
-}
+	// app.all('/api/app/status', routes.api.app.status);
+	// app.all('/api/app/rsvp', routes.api.app.rsvp);
+	// app.all('/api/app/signin-email', routes.api.app['signin-email']);
+	// app.all('/api/app/signup-email', routes.api.app['signup-email']);
+	// app.all('/api/app/signin-service', routes.api.app['signin-service']);
+	// app.all('/api/app/signin-service-check', routes.api.app['signin-service-check']);
+	// app.all('/api/app/signin-recover', routes.api.app['signin-recover']);
+};

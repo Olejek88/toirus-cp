@@ -1,12 +1,12 @@
-var keystone = require('keystone');
+const keystone = require('keystone');
 
 module.exports = {
 
 	/** New Enquiry Notifications */
 	'enquiry-notification': function (req, res, callback) {
-		var Enquiry = keystone.list('Enquiry');
+		const Enquiry = keystone.list('Enquiry');
 
-		var newEnquiry = new Enquiry.model({
+		const newEnquiry = new Enquiry.model({
 			name: { first: 'Test', last: 'User' },
 			email: 'contact@my-site.com',
 			phone: '+61 2 1234 5678',

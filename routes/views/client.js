@@ -1,24 +1,24 @@
-var keystone = require('keystone'),
-	_ = require('lodash'),
-	moment = require('moment');
-var Client = keystone.list('Client');
-var Method = keystone.list('Method');
-var ObjectID = require('mongodb').ObjectID;
+const keystone = require('keystone');
+const _ = require('lodash');
+const moment = require('moment');
 
-exports = module.exports = function(req, res) {
-	
-	var view = new keystone.View(req, res),
+const Client = keystone.list('Client');
+const Method = keystone.list('Method');
+const ObjectID = require('mongodb').ObjectID;
+
+exports = module.exports = function (req, res) {
+	let view = new keystone.View(req, res),
 		locals = res.locals;
-	
+
 	locals.section = 'client';
 	locals.page.title = 'ТОиРУС настройки клиента';
-		
+
 	// load client
-	
-	view.on('init', function(next) {
+
+	view.on('init', (next) => {
 		console.log(locals.user.client);
-		Client.model.findOne().where("_id", new ObjectID(locals.user.client))
-			.exec(function(err, client) {
+		Client.model.findOne().where('_id', new ObjectID(locals.user.client))
+			.exec((err, client) => {
 				if (err) return res.err(err);
 				console.log(client);
 				if (!client) return res.redirect('/clientnew');
@@ -27,34 +27,33 @@ exports = module.exports = function(req, res) {
 			});
 	});
 
-	view.on('init', function(next) {
+	view.on('init', (next) => {
 		Method.model.find()
-		.exec(function(err, methods) {
+		.exec((err, methods) => {
 			if (err) return res.err(err);
-			//console.log(methods);
+			// console.log(methods);
 			locals.methods = methods;
 			next();
 		});
 	});
 
-	view.on('post', { action: 'client.details' }, function(next) {
+	view.on('post', { action: 'client.details' }, (next) => {
 		Client.model.findOne()
-			.where("_id", new ObjectID(locals.user.client))
-			.exec(function(err, client) {			
+			.where('_id', new ObjectID(locals.user.client))
+			.exec((err, client) => {
 				if (err) return res.err(err);
-				if (!client) return res.notfound('Клиент не найден');				
+				if (!client) return res.notfound('Клиент не найден');
 				client.getUpdateHandler(req).process(req.body, {
 					fields: 'name, address, phone, description, method',
-					flashErrors: true
-				}, function(err) {	
+					flashErrors: true,
+				}, (err) => {
 	    			if (err) {
 					return next();
-	    			}			
-				req.flash('success', 'Изменения сохранены');
-				return res.redirect('/client');
+	    			}
+					req.flash('success', 'Изменения сохранены');
+					return res.redirect('/client');
 				});
 			});
-	
-	});		
+	});
 	view.render('site/client');
 };

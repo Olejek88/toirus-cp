@@ -1,18 +1,18 @@
 
 exports.create = { Role: [
-    {
-        'name': 'Super',
-        __ref: 'role_super'
-    },
-    {
-        'name': 'Admin',
-        __ref: 'role_admin'
-    },
-    {
-        'name': 'User',
-        __ref: 'role_user'
-    }
-], };
+  {
+    name: 'Super',
+    __ref: 'role_super',
+  },
+  {
+    name: 'Admin',
+    __ref: 'role_admin',
+  },
+  {
+    name: 'User',
+    __ref: 'role_user',
+  },
+] };
 
 /*
 exports.User = [
@@ -26,4 +26,4 @@ exports.User = [
         roles: ['role_super'],
         __ref: 'admin_user'
     }
-];*/
+]; */

@@ -1,54 +1,53 @@
-var _ = require('lodash');
-var querystring = require('querystring');
-var keystone = require('keystone');
+const _ = require('lodash');
+const querystring = require('querystring');
+const keystone = require('keystone');
 
 exports.packages = [
-	'lodash'
+	'lodash',
 ];
 
 
-exports.initLocals = function(req, res, next) {
-
-	var locals = res.locals;
-	//console.log (req.user);
-	if (req.user)
-	locals.navLinks = [
-		{ label: 'Аккаунт',	key: 'home',		href: '/me' },		
+exports.initLocals = function (req, res, next) {
+	const locals = res.locals;
+	// console.log (req.user);
+	if (req.user) {
+		locals.navLinks = [
+		{ label: 'Аккаунт',	key: 'home',		href: '/me' },
 		{ label: 'Клиент',	key: 'client',		href: '/client' },
 		{ label: 'Услуги',	key: 'services',	href: '/services' },
 		{ label: 'Платежи',	key: 'payments',	href: '/payments' },
 		{ label: 'Вопросы',	key: 'tickets',		href: '/tickets' },
-	];
-	else
-	locals.navLinks = [
-		{ label: 'Домой',			key: 'home',		href: '/me' }
-	];
-	
+		];
+	} else	{
+		locals.navLinks = [
+		{ label: 'Домой',			key: 'home',		href: '/me' },
+		];
+	}
+
 	locals.user = req.user;
 
 	locals.basedir = keystone.get('basedir');
 
 	locals.page = {
 		title: 'Панель управления услугами системы ТОиРУС',
-		path: req.url.split("?")[0] // strip the query - handy for redirecting back to the page
+		path: req.url.split('?')[0], // strip the query - handy for redirecting back to the page
 	};
 
 	locals.qs_set = qs_set(req, res);
 
 	if (req.cookies.target && req.cookies.target == locals.page.path) res.clearCookie('target');
 
-	var bowser = require('../lib/node-bowser').detect(req);
+	const bowser = require('../lib/node-bowser').detect(req);
 
 	locals.system = {
 		mobile: bowser.mobile,
 		ios: bowser.ios,
 		iphone: bowser.iphone,
 		ipad: bowser.ipad,
-		android: bowser.android
-	}
+		android: bowser.android,
+	};
 
 	next();
-
 };
 
 
@@ -56,34 +55,34 @@ exports.initLocals = function(req, res, next) {
 	Make sponsors universally available
 */
 
-exports.loadSponsors = function(req, res, next) {
-	keystone.list('Organisation').model.find().sort('name').exec(function(err, sponsors) {
+exports.loadSponsors = function (req, res, next) {
+	keystone.list('Organisation').model.find().sort('name').exec((err, sponsors) => {
 		if (err) return next(err);
 		req.sponsors = sponsors;
 		res.locals.sponsors = sponsors;
 		next();
 	});
-}
+};
 
 
 /**
 	Inits the error handler functions into `req`
 */
 
-exports.initErrorHandlers = function(req, res, next) {
-	res.err = function(err, title, message) {
+exports.initErrorHandlers = function (req, res, next) {
+	res.err = function (err, title, message) {
 		res.status(500).render('errors/500', {
-			err: err,
+			err,
 			errorTitle: title,
-			errorMsg: message
+			errorMsg: message,
 		});
-	}
-	res.notfound = function(title, message) {
+	};
+	res.notfound = function (title, message) {
 		res.status(404).render('errors/404', {
 			errorTitle: title,
-			errorMsg: message
+			errorMsg: message,
 		});
-	}
+	};
 	next();
 };
 
@@ -92,15 +91,15 @@ exports.initErrorHandlers = function(req, res, next) {
 	Fetches and clears the flashMessages before a view is rendered
 */
 
-exports.flashMessages = function(req, res, next) {
-	var flashMessages = {
+exports.flashMessages = function (req, res, next) {
+	const flashMessages = {
 		info: req.flash('info'),
 		success: req.flash('success'),
 		warning: req.flash('warning'),
-		error: req.flash('error')
+		error: req.flash('error'),
 	};
-	//console.log ("flashM");
-	//res.locals.messages = _.any(flashMessages, function(msgs) { return msgs.length }) ? flashMessages : false;
+	// console.log ("flashM");
+	// res.locals.messages = _.any(flashMessages, function(msgs) { return msgs.length }) ? flashMessages : false;
 	res.locals.messages = flashMessages;
 	next();
 };
@@ -109,31 +108,31 @@ exports.flashMessages = function(req, res, next) {
 	Prevents people from accessing protected pages when they're not signed in
  */
 
-exports.requireUser = function(req, res, next) {
+exports.requireUser = function (req, res, next) {
 	if (!req.user) {
 		req.flash('error', 'Пожалуйста зарегистрируйтесь для доступа к странице');
 		res.redirect('/signin');
 	} else {
 		next();
 	}
-}
+};
 
 /**
 	Returns a closure that can be used within views to change a parameter in the query string
 	while preserving the rest.
 */
 
-var qs_set = exports.qs_set = function(req, res) {
+var qs_set = exports.qs_set = function (req, res) {
 	return function qs_set(obj) {
-		var params = _.clone(req.query);
-		for (var i in obj) {
+		const params = _.clone(req.query);
+		for (const i in obj) {
 			if (obj[i] === undefined || obj[i] === null) {
 				delete params[i];
 			} else if (obj.hasOwnProperty(i)) {
 				params[i] = obj[i];
 			}
 		}
-		var qs = querystring.stringify(params);
-		return req.path + (qs ? '?' + qs : '');
-	}
-}
+		const qs = querystring.stringify(params);
+		return req.path + (qs ? `?${qs}` : '');
+	};
+};
