@@ -1,6 +1,6 @@
 const keystone = require('keystone');
 
-exports = module.exports = function (req, res) {
+module.exports = function a(req, res) {
 	const view = new keystone.View(req, res);
 	const locals = res.locals;
 
@@ -11,3 +11,4 @@ exports = module.exports = function (req, res) {
 	// Render the view
 	view.render('index');
 };
+exports = module.exports;

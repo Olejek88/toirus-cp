@@ -2,9 +2,8 @@ const keystone = require('keystone');
 
 const User = keystone.list('User');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
 
 	view.on('post', { action: 'forgot-password' }, (next) => {
 		if (!req.body.email) {
@@ -18,20 +17,22 @@ exports = module.exports = function (req, res) {
 				req.flash('error', 'Извините, но мы не можем найти данный адрес.');
 				return next();
 			}
-			user.resetPassword((err) => {
+			user.resetPassword((err2) => {
 				// if (err) return next(err);
-				if (err) {
+				if (err2) {
 					console.error('===== ERROR sending reset password email =====');
 					console.error(err);
-					req.flash('error', 'Error sending reset password email. Please <a href="https://github.com/JedWatson/sydjs-site/issues" class="alert-link">let&nbsp;us&nbsp;know</a> about this error');
-					next();
-				} else {
-					req.flash('success', 'We have emailed you a link to reset your password');
-					res.redirect('/signin');
+					req.flash('error', 'Error sending reset password email. Please let us know about this error');
+					return next();
 				}
+				req.flash('success', 'We have emailed you a link to reset your password');
+				return res.redirect('/signin');
 			});
+			return next();
 		});
+		return next();
 	});
 
-	view.render('session/forgot-password');
+	return view.render('session/forgot-password');
 };
+exports = module.exports;

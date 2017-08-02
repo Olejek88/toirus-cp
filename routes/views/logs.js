@@ -2,11 +2,11 @@ const keystone = require('keystone');
 
 const Log = keystone.list('Log');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
 
 	view.query('logs', Log.model.find().sort('updateAt').sort('-createdAt'));
 
 	view.render('site/logs');
 };
+exports = module.exports;

@@ -7,7 +7,7 @@ exports.packages = [
 ];
 
 
-exports.initLocals = function (req, res, next) {
+exports.initLocals = function initlocals(req, res, next) {
 	const locals = res.locals;
 	// console.log (req.user);
 	if (req.user) {
@@ -35,7 +35,7 @@ exports.initLocals = function (req, res, next) {
 
 	locals.qs_set = qs_set(req, res);
 
-	if (req.cookies.target && req.cookies.target == locals.page.path) res.clearCookie('target');
+	if (req.cookies.target && req.cookies.target === locals.page.path) res.clearCookie('target');
 
 	const bowser = require('../lib/node-bowser').detect(req);
 
@@ -48,20 +48,6 @@ exports.initLocals = function (req, res, next) {
 	};
 
 	next();
-};
-
-
-/**
-	Make sponsors universally available
-*/
-
-exports.loadSponsors = function (req, res, next) {
-	keystone.list('Organisation').model.find().sort('name').exec((err, sponsors) => {
-		if (err) return next(err);
-		req.sponsors = sponsors;
-		res.locals.sponsors = sponsors;
-		next();
-	});
 };
 
 
@@ -99,7 +85,6 @@ exports.flashMessages = function (req, res, next) {
 		error: req.flash('error'),
 	};
 	// console.log ("flashM");
-	// res.locals.messages = _.any(flashMessages, function(msgs) { return msgs.length }) ? flashMessages : false;
 	res.locals.messages = flashMessages;
 	next();
 };

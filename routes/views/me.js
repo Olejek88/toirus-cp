@@ -1,18 +1,18 @@
 const keystone = require('keystone');
 const _ = require('lodash');
-const moment = require('moment');
+// const moment = require('moment');
 
-const Client = keystone.list('Client');
+// const Client = keystone.list('Client');
 const Service = keystone.list('Service');
 const User = keystone.list('User');
 const Ticket = keystone.list('Ticket');
 const Payment = keystone.list('Payment');
 
-const dateFormat = require('dateformat');
+// const dateFormat = require('dateformat');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'me';
 	locals.page.title = 'ТОиРУС настройки аккаунта';
@@ -28,7 +28,7 @@ exports = module.exports = function (req, res) {
 				return res.redirect('/signin');
 			}
 			locals.user = user;
-			next();
+			return next();
 		});
 	});
 
@@ -38,8 +38,8 @@ exports = module.exports = function (req, res) {
 			.count((err, count) => {
 				if (err) return res.err(err);
 				locals.servicecount = count;
+				return next();
 			});
-		next();
 	});
 
 	view.on('render', (next) => {
@@ -49,8 +49,8 @@ exports = module.exports = function (req, res) {
 			.count((err, count) => {
 				if (err) return res.err(err);
 				locals.serviceactive = count;
+				return next();
 			});
-		next();
 	});
 
 	view.on('render', (next) => {
@@ -62,7 +62,7 @@ exports = module.exports = function (req, res) {
 			if (err) return res.err(err);
 			locals.tickets = tickets;
 			// dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
-			next();
+			return next();
 		});
 	});
 
@@ -73,8 +73,8 @@ exports = module.exports = function (req, res) {
 		.count((err, count) => {
 			if (err) return res.err(err);
 			locals.ticketscount = count;
+			return next();
 		});
-	    next();
 	});
 
 	view.on('render', (next) => {
@@ -85,12 +85,14 @@ exports = module.exports = function (req, res) {
 		.where('status', 'new')
 		.exec((err, payments) => {
 			if (err) return res.err(err);
-			for (const index in payments) {
-				sum += payments[index].sum;
+			if (payments) {
+				for (const index in payments) {
+					sum += payments[index].sum;
+				}
 			}
 			locals.balance = sum * (-1);
+			return next();
 		});
-	    next();
 	});
 
 	view.on('render', (next) => {
@@ -101,7 +103,7 @@ exports = module.exports = function (req, res) {
 			if (err) return res.err(err);
 			locals.payments = payments;
 			// dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
-			next();
+			return next();
 		});
 	});
 
@@ -112,8 +114,8 @@ exports = module.exports = function (req, res) {
 		.count((err, count) => {
 			if (err) return res.err(err);
 			locals.ticketsactive = count;
+			return next();
 		});
-	    next();
 	});
 
 	view.on('post', { action: 'profile.details' }, (next) => {
@@ -124,7 +126,6 @@ exports = module.exports = function (req, res) {
 			if (err) {
 				return next();
 			}
-
 			req.flash('success', 'Your changes have been saved.');
 			return next();
 		});
@@ -133,12 +134,11 @@ exports = module.exports = function (req, res) {
 	view.on('init', (next) => {
 		if (!_.has(req.query, 'disconnect')) return next();
 
-		const serviceName = '';
 		keystone.list('User').model.findOne().populate('client', (err, doc) => {
 			console.log(doc.client.name);
 			console.log(doc.populated('client'));
 		});
-		keystone.list('Client').model.findOne({ _id: user.client }, (err, item) => { console.log(item); });
+		keystone.list('Client').model.findOne({ _id: req.user.client }, (err, item) => { console.log(item); });
 
 		User.model.findOne()
 		.where('_id', req.user._id)
@@ -150,7 +150,7 @@ exports = module.exports = function (req, res) {
 				return res.redirect('/signin');
 			}
 			locals.user = user;
-			next();
+//			return next();
 		});
 
 		req.user.save((err) => {
@@ -159,9 +159,7 @@ exports = module.exports = function (req, res) {
 				req.flash('success', 'The service could not be disconnected, please try again.');
 				return next();
 			}
-
-			req.flash('success', `${serviceName} has been successfully disconnected.`);
-			return res.redirect('/me');
+			return next();
 		});
 	});
 
@@ -183,6 +181,7 @@ exports = module.exports = function (req, res) {
 			return next();
 		});
 	});
-
 	view.render('site/me');
+	//return res.redirect('/me');
 };
+exports = module.exports;

@@ -2,13 +2,13 @@ const keystone = require('keystone');
 
 const Payment = keystone.list('Payment');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
-	let paymentscount = 0;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
+//	let paymentscount = 0;
 	locals.section = 'payments';
 	locals.page.title = 'ТОиРУС платежи';
-/*
+	/*
 	view.on('render', function(next) {
 		Payment.model.find()
 		.where('client', req.user.client)
@@ -17,7 +17,7 @@ exports = module.exports = function (req, res) {
 			locals.payments = payments;
 		});
 		next();
-	}); */
+	});
 
 	view.on('render', (next) => {
 		Payment.model.find()
@@ -29,9 +29,10 @@ exports = module.exports = function (req, res) {
 			console.log(`count=${locals.ments}`);
 		});
 		next();
-	});
+	}); */
 
 	view.query('payments', Payment.model.find().where('client', req.user.client).populate('method').sort('-createdAt'));
 
 	view.render('site/payments');
 };
+exports = module.exports;

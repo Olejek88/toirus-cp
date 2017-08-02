@@ -1,14 +1,11 @@
 const keystone = require('keystone');
-const _ = require('lodash');
-const moment = require('moment');
 
 const Payment = keystone.list('Payment');
-const Client = keystone.list('Client');
 const ObjectID = require('mongodb').ObjectID;
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'payments';
 	locals.page.title = 'Платеж';
@@ -24,7 +21,7 @@ exports = module.exports = function (req, res) {
 				if (err) return res.err(err);
 				if (!payment) return res.notfound('Платеж не найден');
 				locals.payment = payment;
-				next();
+				return next();
 			});
 	});
 
@@ -38,15 +35,16 @@ exports = module.exports = function (req, res) {
 				payment.getUpdateHandler(req).process(req.body, {
 					fields: 'name, status, method, sum',
 					flashErrors: true,
-				}, (err) => {
-	    			if (err) {
-					return next();
-	    			}
+				}, (err2) => {
+					if (err2) {
+						return next();
+					}
 					req.flash('success', 'Изменения сохранены');
-				// return next();
 					return res.redirect('/payments');
 				});
+				return next();
 			});
 	});
 	view.render('site/payment');
 };
+exports = module.exports;

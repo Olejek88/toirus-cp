@@ -2,9 +2,9 @@ const keystone = require('keystone');
 
 const User = keystone.list('User');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	view.on('init', (next) => {
 		User.model.findOne().where('resetPasswordKey', req.params.key).exec((err, user) => {
@@ -14,18 +14,18 @@ exports = module.exports = function (req, res) {
 				return res.redirect('/forgot-password');
 			}
 			locals.found = user;
-			next();
+			return next();
 		});
 	});
 
 	view.on('post', { action: 'reset-password' }, (next) => {
 		if (!req.body.password || !req.body.password_confirm) {
-			req.flash('error', 'Please enter, and confirm your new password.');
+			req.flash('error', 'Пожалйуста, введите и подтвердите свой пароль.');
 			return next();
 		}
 
-		if (req.body.password != req.body.password_confirm) {
-			req.flash('error', 'Please make sure both passwords match.');
+		if (req.body.password !== req.body.password_confirm) {
+			req.flash('error', 'Пожалуйста проверьте, что оба пароля совпадают.');
 			return next();
 		}
 
@@ -33,10 +33,13 @@ exports = module.exports = function (req, res) {
 		locals.found.resetPasswordKey = '';
 		locals.found.save((err) => {
 			if (err) return next(err);
-			req.flash('success', 'Your password has been reset, please sign in.');
+			req.flash('success', 'Ваш пароль сброшен, пожалуйста залогиньтесь.');
 			res.redirect('/signin');
+			return next();
 		});
+		return next();
 	});
 
 	view.render('session/reset-password');
 };
+exports = module.exports;

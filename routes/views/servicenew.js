@@ -8,9 +8,9 @@ const Log = keystone.list('Log');
 const randomip = require('random-ip');
 const ObjectID = require('mongodb').ObjectID;
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'servicenew';
 	locals.page.title = 'Заказ услуги ТОиРУС';
@@ -23,20 +23,19 @@ exports = module.exports = function (req, res) {
 
 	view.on('post', { action: 'service.add' }, (next) => {
 		// handle form
-		let newService = new Service.model({
-				name: req.body.name,
-				ip: randomip('192.168.2.0', 24),
-				date_end: new Date(year + 1, month, day),
-				dbase: 'db12.toirus',
-				users_num: req.body.users_num,
-				tags_num: req.body.tags_num,
-				client: locals.user.client,
-				description: req.body.description,
-			}),
-
-			updater = newService.getUpdateHandler(req, res, {
-				errorMessage: 'Проблема с добавлением сервиса ',
-			});
+		const newService = new Service.model({
+			name: req.body.name,
+			ip: randomip('192.168.2.0', 24),
+			date_end: new Date(year + 1, month, day),
+			dbase: 'db12.toirus',
+			users_num: req.body.users_num,
+			tags_num: req.body.tags_num,
+			client: locals.user.client,
+			description: req.body.description,
+		});
+		const updater = newService.getUpdateHandler(req, res, {
+			errorMessage: 'Проблема с добавлением сервиса ',
+		});
 
 		nService = newService;
 
@@ -50,12 +49,12 @@ exports = module.exports = function (req, res) {
 			} else {
 				let paymentId = 1;
 				Payment.model.find().populate('client').populate('method').sort({ paymentId: -1 })
-						.exec((err, data) => {
+						.exec((err2, data) => {
 							if (data[0] && data[0].paymentId) { paymentId = data[0].paymentId + 1; }
 							console.log(nService);
 							console.log(newService);
-							Client.model.findOne().where('_id', ObjectID(locals.user.client)).populate('method').exec((err, client) => {
-								if (err) {
+							Client.model.findOne().where('_id', ObjectID(locals.user.client)).populate('method').exec((err3, client) => {
+								if (err3) {
 									req.flash('error', 'Клиент не сконфигурирован');
 									console.log('Клиент не сконфигурирован');
 									return next();
@@ -65,19 +64,19 @@ exports = module.exports = function (req, res) {
 									paymentId,
 									name: `Платеж за ${req.body.name} (годовой)`,
 									service: nService,
-								 	client,
+									client,
 									method: client.method,
-									sum: req.body.users_num * 100 + req.body.tags_num * 10 + 30000,
+									sum: ((req.body.users_num * 100) + (req.body.tags_num * 10) + 30000),
 									status: 'new',
-								}).save((err) => {
-									if (err) { console.log(err); }
+								}).save((err4) => {
+									if (err4) { console.log(err4); }
 								});
 
 								new Log.model({
 									description: `Пользователем ${locals.user.name} заказана услуга ${req.body.name}`,
 									user: locals.user,
-								}).save((err) => {
-									if (err) { console.log(err); }
+								}).save((err4) => {
+									if (err4) { console.log(err4); }
 								});
 
 								req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
@@ -103,7 +102,9 @@ exports = module.exports = function (req, res) {
 			req.flash('success', `${serviceName} has been successfully disconnected.`);
 			return res.redirect('/me');
 		});
+		return next();
 	});
 
 	view.render('site/servicenew');
 };
+exports = module.exports;

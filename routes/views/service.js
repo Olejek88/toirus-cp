@@ -1,14 +1,14 @@
 const keystone = require('keystone');
-const _ = require('lodash');
-const moment = require('moment');
+// const _ = require('lodash');
+// const moment = require('moment');
 
 const Service = keystone.list('Service');
 const Log = keystone.list('Log');
 const ObjectID = require('mongodb').ObjectID;
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'service';
 	locals.page.title = 'ТОиРУС настройки сервиса';
@@ -24,7 +24,7 @@ exports = module.exports = function (req, res) {
 				if (!service) return res.notfound('Сервис не найден');
 				console.log(service.name);
 				locals.service = service;
-				next();
+				return next();
 			});
 	});
 
@@ -38,18 +38,18 @@ exports = module.exports = function (req, res) {
 				service.getUpdateHandler(req).process(req.body, {
 					fields: 'name, description, users_num, tags_num',
 					flashErrors: true,
-				}, (err) => {
-	    			if (err) {
-					return next();
-	    			}
+				}, (err2) => {
+					if (err2) {
+						return next();
+					}
 					req.flash('success', 'Изменения сохранены');
-				// return next();
 					return res.redirect('/me');
 				});
+				return next();
 			});
 	});
 
-	view.on('post', { action: 'service.delete' }, (next) => {
+	view.on('post', { action: 'service.delete' }, () => {
 		console.log('post');
 		Service.model.findOne()
 			.where('_id', new ObjectID(req.params.service))
@@ -57,8 +57,8 @@ exports = module.exports = function (req, res) {
 				new Log.model({
 					description: `Пользователем ${locals.user.name} удалена услуга `,
 					user: locals.user,
-				}).save((err) => {
-					if (err) { console.log(err); }
+				}).save((err2) => {
+					if (err2) { console.log(err); }
 				});
 				return res.redirect('/services');
 			});
@@ -66,3 +66,4 @@ exports = module.exports = function (req, res) {
 
 	view.render('site/service');
 };
+exports = module.exports;

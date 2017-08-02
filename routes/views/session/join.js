@@ -1,21 +1,20 @@
 const keystone = require('keystone');
 const async = require('async');
 
-exports = module.exports = function (req, res) {
+module.exports = function a(req, res) {
 	if (req.user) {
 		return res.redirect(req.cookies.target || '/me');
 	}
 
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'session';
 	locals.form = req.body;
 
 	view.on('post', { action: 'join' }, (next) => {
 		async.series([
-
-			function (cb) {
+			function cb1(cb) {
 				if (!req.body.name || !req.body.email || !req.body.password) {
 					req.flash('error', 'Пожалуйста введите имя, email и пароль.');
 					// console.log('Please enter a name, email and password.');
@@ -25,7 +24,7 @@ exports = module.exports = function (req, res) {
 				return cb();
 			},
 
-			function (cb) {
+			function cb2(cb) {
 				keystone.list('User').model.findOne({ email: req.body.email }, (err, user) => {
 					console.log('check user');
 					if (err || user) {
@@ -38,15 +37,15 @@ exports = module.exports = function (req, res) {
 				});
 			},
 
-			function (cb) {
+			function cb3(cb) {
 				const userData = {
 					name: req.body.name,
 					email: req.body.email,
 					password: req.body.password,
 				};
 
-				let User = keystone.list('User').model,
-					newUser = new User(userData);
+				const User = keystone.list('User').model;
+				const newUser = new User(userData);
 
 				newUser.save(err => cb(err));
 			},
@@ -63,14 +62,18 @@ exports = module.exports = function (req, res) {
 				}
 			};
 
-			const onFail = function (e) {
+			const onFail = function () {
 				req.flash('error', 'Проблема с входом систему, попробуйте еще');
 				return next();
 			};
 
-			keystone.session.signin({ email: req.body.email, password: req.body.password }, req, res, onSuccess, onFail);
+			keystone.session.signin({
+				email: req.body.email,
+				password: req.body.password },
+			req, res, onSuccess, onFail);
+			return next();
 		});
 	});
-
-	view.render('session/join');
+	return view.render('session/join');
 };
+exports = module.exports;

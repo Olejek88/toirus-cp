@@ -1,10 +1,10 @@
 const keystone = require('keystone');
 const _ = require('lodash');
-const moment = require('moment');
+// const moment = require('moment');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'meedit';
 	locals.page.title = 'ТОиРУС настройки профиль';
@@ -37,6 +37,7 @@ exports = module.exports = function (req, res) {
 			req.flash('success', `${serviceName} has been successfully disconnected.`);
 			return res.redirect('/me');
 		});
+		return next();
 	});
 
 	view.on('post', { action: 'profile.password' }, (next) => {
@@ -56,7 +57,9 @@ exports = module.exports = function (req, res) {
 			req.flash('success', 'Your changes have been saved.');
 			return next();
 		});
+		return next();
 	});
 
 	view.render('site/meedit');
 };
+exports = module.exports;

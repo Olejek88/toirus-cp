@@ -1,8 +1,7 @@
 const keystone = require('keystone');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const locals = res.locals;
 
 	locals.section = 'session';
 
@@ -10,3 +9,4 @@ exports = module.exports = function (req, res) {
 		res.redirect('/');
 	});
 };
+exports = module.exports;

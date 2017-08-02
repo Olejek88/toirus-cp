@@ -1,39 +1,41 @@
 const keystone = require('keystone');
-const async = require('async');
 
-exports = module.exports = function (req, res) {
+module.exports = function a(req, res) {
 	if (req.user) {
 		return res.redirect(req.cookies.target || '/me');
 	}
 
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'session';
 	locals.form = req.body;
 
 	view.on('post', { action: 'signin' }, (next) => {
 		if (!req.body.email || !req.body.password) {
-			req.flash('error', 'Please enter your username and password.');
+			req.flash('error', 'Пожалуйста введите е-мэйл и пароль.');
 			return next();
 		}
 
-		const onSuccess = function () {
+		const onSuccess = function os() {
 			if (req.body.target && !/join|signin/.test(req.body.target)) {
 				console.log(`[signin] - Set target as [${req.body.target}].`);
-				res.redirect(req.body.target);
-			} else {
-				res.redirect('/me');
+				return res.redirect(req.body.target);
 			}
+			return res.redirect('/me');
 		};
 
-		const onFail = function () {
-			req.flash('error', 'Your username or password were incorrect, please try again.');
+		const onFail = function of() {
+			req.flash('error', 'Имя пользователя или пароль не найдены, попробуйте еще раз.');
 			return next();
 		};
 
-		keystone.session.signin({ email: req.body.email, password: req.body.password }, req, res, onSuccess, onFail);
+		keystone.session.signin({
+			email: req.body.email,
+			password: req.body.password,
+		}, req, res, onSuccess, onFail);
 	});
 
-	view.render('session/signin');
+	return view.render('session/signin');
 };
+exports = module.exports;

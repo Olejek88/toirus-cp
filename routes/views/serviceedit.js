@@ -1,10 +1,8 @@
 const keystone = require('keystone');
-const _ = require('lodash');
-const moment = require('moment');
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'serviceedit';
 	locals.page.title = 'ТОиРУС настройки сервиса';
@@ -24,3 +22,4 @@ exports = module.exports = function (req, res) {
 
 	view.render('site/serviceedit');
 };
+exports = module.exports;

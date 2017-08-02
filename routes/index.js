@@ -1,6 +1,6 @@
-const babelify = require('babelify');
-const bodyParser = require('body-parser');
-const browserify = require('browserify-middleware');
+// const babelify = require('babelify');
+// const bodyParser = require('body-parser');
+// const browserify = require('browserify-middleware');
 // var clientConfig = require('../client/config');
 const keystone = require('keystone');
 const middleware = require('./middleware');
@@ -28,8 +28,8 @@ keystone.set('404', (req, res, next) => {
 
 // Handle other errors
 keystone.set('500', (err, req, res, next) => {
-	let title,
-		message;
+	let	title;
+	let	message;
 	if (err instanceof Error) {
 		message = err.message;
 		err = err.stack;
@@ -49,7 +49,7 @@ const routes = {
 };
 
 // Bind Routes
-exports = module.exports = function (app) {
+module.exports = function (app) {
 	// Browserification
 	/*
 	app.get('/js/packages.js', browserify(clientConfig.packages, {
@@ -153,3 +153,4 @@ exports = module.exports = function (app) {
 	// app.all('/api/app/signin-service-check', routes.api.app['signin-service-check']);
 	// app.all('/api/app/signin-recover', routes.api.app['signin-recover']);
 };
+exports = module.exports;

@@ -1,13 +1,11 @@
 const keystone = require('keystone');
-const _ = require('lodash');
-const moment = require('moment');
-
-const Ticket = keystone.list('Ticket');
 const ObjectID = require('mongodb').ObjectID;
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+const Ticket = keystone.list('Ticket');
+
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'tickets';
 	locals.page.title = 'Запрос';
@@ -21,7 +19,7 @@ exports = module.exports = function (req, res) {
 				if (err) return res.err(err);
 				if (!ticket) return res.notfound('Запрос не найден');
 				locals.ticket = ticket;
-				next();
+				return next();
 			});
 	});
 
@@ -35,12 +33,12 @@ exports = module.exports = function (req, res) {
 				ticket.getUpdateHandler(req).process(req.body, {
 					fields: 'name, message',
 					flashErrors: true,
-				}, (err) => {
-	    			if (err) {
-					return next();
-	    			}
+				}, (err2) => {
+					if (err2) {
+						return next();
+					}
 					req.flash('success', 'Изменения сохранены');
-				// return next();
+					// return next();
 					return res.redirect('/tickets');
 				});
 			});
@@ -49,9 +47,12 @@ exports = module.exports = function (req, res) {
 	view.on('post', { action: 'ticket.delete' }, (next) => {
 		Ticket.model.findOne()
 			.where('_id', new ObjectID(req.params.ticket))
-			.remove(err =>
+			.remove((err) => {
+				if (err) return res.err(err);
 				// post has been deleted
-   res.redirect('/tickets'));
+				res.redirect('/tickets');
+				return next();
+			});
 	});
 
 	view.on('post', { action: 'ticket.close' }, (next) => {
@@ -65,16 +66,17 @@ exports = module.exports = function (req, res) {
 				ticket.getUpdateHandler(req).process(req.body, {
 					fields: 'ticketStatus',
 					flashErrors: true,
-				}, (err) => {
-	    			if (err) {
-					return next();
-	    			}
+				}, (err2) => {
+					if (err2) {
+						return next();
+					}
 					req.flash('success', 'Изменения сохранены');
-				// return next();
 					return res.redirect('/tickets');
 				});
+				return next();
 			});
 	});
 
 	view.render('site/ticket');
 };
+exports = module.exports;

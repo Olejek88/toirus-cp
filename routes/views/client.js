@@ -1,14 +1,14 @@
 const keystone = require('keystone');
-const _ = require('lodash');
-const moment = require('moment');
+// const _ = require('lodash');
+// const moment = require('moment');
 
 const Client = keystone.list('Client');
 const Method = keystone.list('Method');
 const ObjectID = require('mongodb').ObjectID;
 
-exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+module.exports = function a(req, res) {
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'client';
 	locals.page.title = 'ТОиРУС настройки клиента';
@@ -23,7 +23,7 @@ exports = module.exports = function (req, res) {
 				console.log(client);
 				if (!client) return res.redirect('/clientnew');
 				locals.client = client;
-				next();
+				return next();
 			});
 	});
 
@@ -33,7 +33,7 @@ exports = module.exports = function (req, res) {
 			if (err) return res.err(err);
 			// console.log(methods);
 			locals.methods = methods;
-			next();
+			return next();
 		});
 	});
 
@@ -46,10 +46,10 @@ exports = module.exports = function (req, res) {
 				client.getUpdateHandler(req).process(req.body, {
 					fields: 'name, address, phone, description, method',
 					flashErrors: true,
-				}, (err) => {
-	    			if (err) {
-					return next();
-	    			}
+				}, (err2) => {
+					if (err2) {
+						return next();
+					}
 					req.flash('success', 'Изменения сохранены');
 					return res.redirect('/client');
 				});
@@ -57,3 +57,4 @@ exports = module.exports = function (req, res) {
 	});
 	view.render('site/client');
 };
+exports = module.exports;
