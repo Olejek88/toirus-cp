@@ -1,12 +1,12 @@
-var keystone = require('keystone');
+const keystone = require('keystone');
 
-var Role = new keystone.List('Role', {
-    autokey: { path: 'key', from: 'name', unique: true },
-    track: true
+const Role = new keystone.List('Role', {
+	autokey: { path: 'key', from: 'name', unique: true },
+	track: true,
 });
 
 Role.add({
-    name: { type: String, required: true, index: true }
+	name: { type: String, required: true, index: true },
 });
 
 // Relationship definitions are optional

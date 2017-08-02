@@ -17,7 +17,8 @@
     "node-sass-middleware": "^0.11.0",
     "nunjucks": "3.0.0",
     "random-ip": "0.0.1",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "uuid": "^3.1.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",
