@@ -10,6 +10,7 @@ const Service = new keystone.List('Service', {
 });
 
 Service.add({
+	serviceId: { type: Types.Number, noedit: true, initial: true, label: 'Идентификатор' },
 	name: { type: String, initial: true, default: 'Новый', required: true },
 	dbase: { type: String, initial: true, default: 'toir' },
 	ip: { type: String, initial: true, default: '127.0.0.1' },

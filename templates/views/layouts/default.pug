@@ -61,16 +61,10 @@ html
 			var SydJS = {};
 			SydJS.meetup = !{JSON.stringify(meetup)};
 
-	script(src='/js/lib/jquery/jquery-1.10.2.min.js')
-	script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js')
-	script(src='/js/lib/bootstrap/collapse.js')
-	script(src='/js/lib/bootstrap/dropdown.js')
-	script(src='/js/lib/bootstrap/modal.js')
-
-	//- Headroom
-	//-script(src="//cdn.jsdelivr.net/headroomjs/0.5.0/headroom.min.js")
-	//-script(src="//cdn.jsdelivr.net/headroomjs/0.5.0/jQuery.headroom.min.js")
-	//-script(src='/js/common/header.js')
+	script(src='/js/jquery/jquery-1.11.3.min.js')
+	script(src='/js/bootstrap/collapse.js')
+	script(src='/js/bootstrap/dropdown.js')
+	script(src='/js/bootstrap/modal.js')
 
 	if user && user.canAccessKeystone
 		script(src='/keystone/js/content/editor.js')

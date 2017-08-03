@@ -1,0 +1,53 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			span.entypo.entypo-users(font-size:40px)
+			|   Клиенты / Организации
+			| 
+			a(href='/clientnew', data-from=page.path).js-auth-trigger.btn.btn-primary.btn-small.mv-1
+				span +добавить организацию
+			br
+		if clients.length
+			each client in clients
+				if client
+					.page-content.tile.ph-0.pv-2.mb-2
+						.panel-heading
+							- var id = client._id;
+							span.entypo.entypo-cog
+							|  #
+							=client.clientId
+							if client.status === 'Новый'
+								|  #{client.name} 
+								font.bblue новый
+							if client.status === 'Активен'
+								|  #{client.name} 
+								font.bred активен
+							if client.status === 'Не активен'
+								|  #{client.name} 
+								font.bred не активен
+							|  [ 
+							a(href='/client/' + id).text-muted редактировать
+							| ]
+						br
+						p.lead.ph-1 Адрес: #{client.address}
+						p.lead.ph-1 Телефон: #{client.phone}
+						p.lead.ph-1 Описание: #{client.description}
+						p.lead.ph-1 Метод оплаты: #{client.method.name}
+						p.lead.ph-1 Баланс: #{client.balance}
+						p.lead.ph-1 Дата регистрации: #{client._.createdAt.format('DD MMM YYYY hh:mm:ss')}
+						p.lead.ph-1 Дата обновления: #{client._.updatedAt.format('DD MMM YYYY hh:mm:ss')}
+		else
+			br
+			h3.text-muted Нет организаций
+			a(href='/clientnew', data-from=page.path).js-auth-trigger.btn.btn-block.btn-primary.mv-1
+				span.text-caps Добавить организацию
+
+			
+
+							

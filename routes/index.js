@@ -128,7 +128,8 @@ module.exports = function (app) {
 
 	// Clients
 	app.all('/clientnew', routes.views.clientnew);
-	app.all('/client', routes.views.client);
+	app.all('/client/:client', routes.views.client);
+	app.all('/clients', routes.views.clients);
 
 	app.all('/contacts', routes.views.contacts);
 	app.all('/faq', routes.views.faq);

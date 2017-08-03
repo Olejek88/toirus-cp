@@ -3,10 +3,10 @@ const keystone = require('keystone');
 
 const Log = keystone.list('Log');
 const Client = keystone.list('Client');
-const User = keystone.list('User');
+// const User = keystone.list('User');
 
 const Method = keystone.list('Method');
-const ObjectID = require('mongodb').ObjectID;
+// const ObjectID = require('mongodb').ObjectID;
 
 module.exports = function a(req, res) {
 	const view = new keystone.View(req, res);
@@ -16,61 +16,37 @@ module.exports = function a(req, res) {
 	locals.page.title = 'Создание клиента ТОиРУС';
 
 	view.on('post', { action: 'client.add' }, (next) => {
-		console.log('add');
+		let clientId = 1;
+		Client.model.find().sort({ clientId: -1 })
+			.exec((err2, data) => {
+				if (data[0] && data[0].clientId) { clientId = data[0].clientId + 1; }
+				const newClient = new Client.model({
+					clientId,
+					name: req.body.name,
+					phone: req.body.phone,
+					address: req.body.address,
+					description: req.body.description,
+					method: req.body.method,
+					createdBy: locals.user,
+					user: locals.user,
+				});
 
-		const newClient = new Client.model({
-			name: req.body.name,
-			phone: req.body.phone,
-			address: req.body.address,
-			description: req.body.description,
-			method: req.body.method,
-			createdBy: locals.user,
-		});
-
-		const updater = newClient.getUpdateHandler(req, res, {
-			errorMessage: 'Проблема с добавлением клиента ',
-		});
-
-		console.log('updater');
-		updater.process(req.body, {
-			flashErrors: true,
-			logErrors: true,
-			fields: 'name,phone,address,description,method',
-		}, (err2) => {
-			if (err2) {
-				locals.validationErrors = err2.errors;
-			} else {
-				console.log('+log');
-
-				User.model.findOne()
-					.where('_id', new ObjectID(locals.user._id))
-					.exec((err3, user) => {
-						if (err3) return res.err(err3);
-						if (user) {
-							user.client = newClient;
-							user.save((err4, user) => {
-								 if (err4) {
-									console.log(err4);
-								}
-								console.log('saved user: ', user);
-							});
-						}
-					});
+				newClient.save((err) => {
+					if (err) { console.log(err); }
+				});
 
 				const newLog = new Log.model({
 					description: `Создан клиент ${req.body.name}`,
 					user: locals.user,
 				});
 
-				newLog.save((err, user) => {
+				newLog.save((err) => {
 					if (err) { console.log(err); }
 				});
 
 				req.flash('success', 'Изменения сохранены');
-				return res.redirect('/client');
-			}
-			return next();
-		});
+				return res.redirect('/clients');
+			});
 	});
 
 	view.on('init', (next) => {

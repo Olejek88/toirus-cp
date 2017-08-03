@@ -57,7 +57,9 @@ mongoose.set('server', {
     keepAlive: 1,
   } });
 
+mongoose.set('safe', true);
 keystone.set('mongoose', mongoose);
+
 // Configure i18n
 /*
 i18n.configure({

@@ -14,7 +14,7 @@ User.add({
 	name: { type: String, required: true, index: true, label: 'Имя' },
 	email: { type: Types.Email, initial: true, required: true, unique: true, index: true },
 	password: { type: Types.Password, initial: true, required: true, label: 'Пароль' },
-	client: { type: Types.Relationship, ref: 'Client', many: false },
+	client: { type: Types.Relationship, ref: 'Client', many: true },
 	// client: { type: Mongoose.Schema.Types.ObjectId, ref: 'Client' },
 	status: { type: Types.Boolean, index: true, initial: true, label: 'Статус' },
 	roles: { type: Types.Relationship, ref: 'Role', many: true },
