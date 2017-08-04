@@ -31,7 +31,7 @@
     "mocha": "^3.5.0"
   },
   "scripts": {
-    "start": "node keystone.js",
+    "start": "node toirus.js",
     "test": "./node_modules/.bin/mocha tests/init.js tests/unit/**"
   }
 }

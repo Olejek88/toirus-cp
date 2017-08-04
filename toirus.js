@@ -54,7 +54,9 @@ keystone.set('locals', {
 
 mongoose.set('server', {
   socketOptions: {
-    keepAlive: 1,
+    keepAlive: 10000,
+    connectTimeoutMS: 10000, 
+    socketTimeoutMS: 30000
   } });
 
 mongoose.set('safe', true);

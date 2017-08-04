@@ -9,7 +9,9 @@ block content
 		.page-intro
 			span.entypo.entypo-cloud(font-size:40px)
 			|   Мои сервисы
-			a(href='/servicenew').text-muted  + заказать новый
+			| 
+			a(href='/servicenew', data-from=page.path).js-auth-trigger.btn.btn-primary.btn-small.mv-1
+				span +заказать новый
 			br
 		if services.length
 			each server in services
@@ -18,6 +20,8 @@ block content
 						.panel-heading
 							- var id = server._id;
 							span.entypo.entypo-cog
+							|  #
+							=server.serviceId
 							if server.status
 								|  #{server.name} 
 								font.bgreen активен
@@ -35,10 +39,12 @@ block content
 							p.lead.ph-1 Клиент: #{server.client.name}
 						p.lead.ph-1 База данных: #{server.dbase}
 						p.lead.ph-1 ip-адрес: #{server.ip}
+						p.lead.ph-1 Имя пользователя: #{server.username}
+						p.lead.ph-1 Пароль: #{server.password}
 						p.lead.ph-1 Пользователей (активно/всего): #{server.users_used}/#{server.users_num}
 						p.lead.ph-1 Тегов (активно/всего): #{server.tags_used}/#{server.tags_num}
-						p.lead.ph-1 Дата регистрации услуги: #{server.date}
-						p.lead.ph-1 Дата окончания услуги: #{server.date_end}
+						p.lead.ph-1 Дата регистрации услуги: #{server._.date.format('DD/MM/YYYY hh:mm:ss')}
+						p.lead.ph-1 Дата окончания услуги: #{server._.date_end.format('DD/MM/YYYY hh:mm:ss')}
 				else
 					h3.text-muted Нет заказанных услуг
 

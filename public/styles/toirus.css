@@ -11,8 +11,9 @@
 .tcenter{text-align:center; }
 .topr{vertical-align:top; valign:top; }
 .bold{font-weight:bold; }
-.bred{background-color:red; background-image: none; padding:.1em .9em .1em; border-radius: .25em;}
-.bgreen{background-color:green; background-image: none; padding:.1em .2em .1em; border-radius: .25em;}
+.bred{background-color:red; color:#fff; background-image: none; padding:.1em .9em .1em; border-radius: .25em;}
+.bgreen{background-color:green; color:#fff; background-image: none; padding:.1em .2em .1em; border-radius: .25em;}
 .bblue{background-color:blue; color:#fff; background-image: none; padding:.1em .2em .1em; border-radius: .25em;}
 .no-wrap{white-space: nowrap}
 .btn-small{padding:.1em .9em .1em; font-weight:100; font-size: 16px}
+.gray{background-color: lightblue;}

@@ -14,6 +14,7 @@ Payment.add({
 	name: { type: String, initial: true, default: '', required: true },
 	service: { type: Types.Relationship, ref: 'Service', many: false },
 	date: { type: Types.Datetime, default: Date.now },
+	user: { type: Types.Relationship, ref: 'User', many: false },
 	client: { type: Types.Relationship, ref: 'Client', index: true, many: false },
 	method: { type: Types.Relationship, ref: 'Method', index: true, many: false },
 	sum: { type: Types.Money, initial: true, default: '0', required: true },

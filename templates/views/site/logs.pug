@@ -27,10 +27,8 @@ block content
 					each log in logs
 						if log
 							tr
-								td.pl-1 #{log._.date.format('DD MMM YYYY hh:mm:ss')}
+								td.pl-1.gray #{log._.date.format('DD/MM/YYYY hh:mm:ss')}
 								td.pl-1 #{locals.user.name}
-								td.pl-1 #{log.description}
-						else
-							h3.text-muted Нет запросов
+								td.pl-1.gray #{log.description}
 
 							

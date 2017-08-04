@@ -2,22 +2,21 @@ const keystone = require('keystone');
 
 module.exports = {
 
-	/** New Enquiry Notifications */
-	'enquiry-notification': function (req, res, callback) {
-		const Enquiry = keystone.list('Enquiry');
+	'ticket-notification': function (req, res, callback) {
+		const Ticket = keystone.list('Ticket');
 
-		const newEnquiry = new Enquiry.model({
+		const newTicket = new Ticket.model({
 			name: { first: 'Test', last: 'User' },
-			email: 'contact@my-site.com',
-			phone: '+61 2 1234 5678',
+			email: 'olejek8@yandex.ru',
+			phone: '+79227000293',
 			enquiryType: 'message',
 			message: { md: 'Nice enquiry notification.' },
 		});
 
 		callback(null, {
 			admin: 'Admin User',
-			enquiry: newEnquiry,
-			enquiry_url: '/keystone/enquiries/',
+			enquiry: newTicket,
+			enquiry_url: '/keystone/tickets/',
 		});
 	},
 

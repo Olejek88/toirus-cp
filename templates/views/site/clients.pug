@@ -27,7 +27,7 @@ block content
 								font.bblue новый
 							if client.status === 'Активен'
 								|  #{client.name} 
-								font.bred активен
+								font.bgreen активен
 							if client.status === 'Не активен'
 								|  #{client.name} 
 								font.bred не активен
@@ -40,14 +40,10 @@ block content
 						p.lead.ph-1 Описание: #{client.description}
 						p.lead.ph-1 Метод оплаты: #{client.method.name}
 						p.lead.ph-1 Баланс: #{client.balance}
-						p.lead.ph-1 Дата регистрации: #{client._.createdAt.format('DD MMM YYYY hh:mm:ss')}
-						p.lead.ph-1 Дата обновления: #{client._.updatedAt.format('DD MMM YYYY hh:mm:ss')}
+						p.lead.ph-1 Дата регистрации: #{client._.createdAt.format('DD/MM/YYYY hh:mm:ss')}
+						p.lead.ph-1 Дата обновления: #{client._.updatedAt.format('DD/MM/YYYY hh:mm:ss')}
 		else
 			br
 			h3.text-muted Нет организаций
 			a(href='/clientnew', data-from=page.path).js-auth-trigger.btn.btn-block.btn-primary.mv-1
 				span.text-caps Добавить организацию
-
-			
-
-							
