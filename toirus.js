@@ -15,7 +15,7 @@ keystone.init({
   port: '3000',
   host: '127.0.0.1',
   mongo: 'mongodb://localhost/toir-dev',
-
+  'mongo options': { server: { keepAlive: 1 }},
   sass: 'public',
   static: 'public',
   favicon: 'public/favicon.ico',

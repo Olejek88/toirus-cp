@@ -31,7 +31,7 @@ module.exports = function a(req, res) {
 		next();
 	}); */
 
-	view.query('payments', Payment.model.find().where('user', req.user).populate('method').sort('-createdAt'));
+	view.query('payments', Payment.model.find().where('user', req.user).populate('method').populate('service').sort('-createdAt'));
 
 	view.render('site/payments');
 };

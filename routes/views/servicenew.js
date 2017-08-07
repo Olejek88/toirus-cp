@@ -70,11 +70,11 @@ module.exports = function a(req, res) {
 					Payment.model.find().populate('client').sort({ paymentId: -1 })
 						.exec((err2, data) => {
 							if (data[0] && data[0].paymentId) { paymentId = data[0].paymentId + 1; }
-							//console.log(nService);
+							console.log(newService);
 							new Payment.model({
 								paymentId,
 								name: `Платеж за ${req.body.name} (годовой)`,
-								service: nService,
+								service: newService,
 								client: req.body.client,
 								user: locals.user,
 								method: method,

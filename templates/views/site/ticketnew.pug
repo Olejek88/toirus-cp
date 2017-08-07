@@ -8,21 +8,25 @@ block content
 			+flash-messages(messages)
 			form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal.create-form.profile-form
 				input(type='hidden', name='action', value='ticket.add')
-				input(type='hidden', name='user', value='')
+				input(type='hidden', name='ticketRef', value=ticketref)
 				.row: .col-sm-8.col-sm-offset-2
 					.form-group
-						h1 Открыть запрос
+						if ticketref
+							h1 Ответить на запрос
+						else
+							h1 Открыть запрос
 						input(type='text', id='name', name='name', placeholder='Дайте название запросу').input.input-md.input-faded
 					.form-group
+					if !ticketref
 						label.col-sm-2.control-label Тип запроса
 						.col-sm-10
+						if !ticketref
 							select(name='ticketType').form-control
 								option(value='') (выберите)
 								option(value="message") Сообщение администратору
 								option(value="question") Вопрос по работе сервиса
 								option(value="other") Что-то другое...
 					.form-group
-						label.col-sm-2.control-label Сообщение
 						.col-sm-10
 							textarea(name='message' placeholder='Оставьте сообщение...' rows=4 required).form-control
 					//- Submit

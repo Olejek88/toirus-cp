@@ -55,7 +55,7 @@ module.exports = function a(req, res) {
 			.where('_id', new ObjectID(req.params.service))
 			.remove((err) => {
 				new Log.model({
-					description: `Пользователем ${locals.user.name} удалена услуга `,
+					description: `Пользователем ${locals.user.name} удалена услуга ${req.body.name}`,
 					user: locals.user,
 				}).save((err2) => {
 					if (err2) { console.log(err); }

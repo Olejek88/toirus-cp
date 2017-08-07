@@ -1,0 +1,43 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			p.lead Редактирование запроса
+		.page-content.tile.ph-0.pv-2.mb-2
+			.panel-heading
+				span.entypo.entypo-cog
+				|  #{ticket.name}
+			br
+			+flash-messages(messages)
+			form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal
+				input(type='hidden', name='action', value='ticket.details')
+				input(type='hidden', name='_id', value=ticket._id)
+				.form-group.ph-1
+					label.col-sm-2.control-label Название
+					.col-sm-10: .form-row
+						.col-xs-6: input(type='text', name='name' value=ticket.name).form-control
+				.form-group.ph-1
+					label.col-sm-2.control-label Текст запроса
+					.col-sm-10: input(type='description', name='message' value=ticket.message).form-control
+				.form-group.ph-2
+					button(type='submit', data-loading-text="Сохраняем...").btn.btn-primary.ph-1 Сохранить
+
+			if (ticket.ticketStatus === 'open' || ticket.ticketStatus === 'process')
+				form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal
+					.form-group.ph-2
+						input(type='hidden', name='action', value='ticket.close')
+						input(type='hidden', name='_id', value=ticket._id)
+						input(type='hidden', name='ticketStatus', value='closed')
+						button(type='submit', data-loading-text="Изменяем...").btn.btn-primary.ph-1.bgreen Закрыть запрос
+
+			form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal
+				.form-group.ph-2
+					input(type='hidden', name='action', value='ticket.delete')
+					input(type='hidden', name='_id', value=ticket._id)
+					button(type='submit', data-loading-text="Удаляем...").btn.btn-primary.ph-1.bred Удалить
+

@@ -119,6 +119,7 @@ module.exports = function (app) {
 	app.all('/ticketnew', routes.views.ticketnew);
 	app.all('/ticket/:ticket', routes.views.ticket);
 	app.all('/ticket/:id', routes.views.ticket);
+	app.all('/ticketnew/:id', routes.views.ticketnew);
 
 	// Payments
 	app.all('/payments', routes.views.payments);

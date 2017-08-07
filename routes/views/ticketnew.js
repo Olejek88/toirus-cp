@@ -12,7 +12,8 @@ module.exports = function a(req, res) {
 	locals.page.title = 'Открыть тикет ТОиРУС';
 
 	view.on('render', (next) => {
-		next();
+		locals.ticketref = req.params.id;
+		return next();
 	});
 
 	view.on('post', { action: 'ticket.add' }, (next) => {
@@ -21,6 +22,7 @@ module.exports = function a(req, res) {
 			if (data[0] && data[0].ticketId) { ticketId = data[0].ticketId + 1; }
 			const newticket = new Ticket.model({
 				ticketId,
+				ticketRef: req.body.ticketRef,
 				name: req.body.name,
 				user: locals.user,
 				ticketType: req.body.ticketType,

@@ -17,3 +17,5 @@
 .no-wrap{white-space: nowrap}
 .btn-small{padding:.1em .9em .1em; font-weight:100; font-size: 16px}
 .gray{background-color: lightblue;}
+.tright{ float:right; }
+.bgray{background-color:#e8e8e8; background-image: none; padding:.1em .9em .1em; border-radius: .25em;}
