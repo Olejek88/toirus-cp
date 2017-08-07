@@ -6,7 +6,7 @@ const Service = keystone.list('Service');
 const Payment = keystone.list('Payment');
 const Client = keystone.list('Client');
 const Log = keystone.list('Log');
-const Method = keystone.list('Method')
+// const Method = keystone.list('Method');
 const randomip = require('random-ip');
 const ObjectID = require('mongodb').ObjectID;
 
@@ -22,7 +22,6 @@ module.exports = function a(req, res) {
 	const year = d.getFullYear();
 	const month = d.getMonth();
 	const day = d.getDate();
-	let nService;
 
 	view.on('post', { action: 'service.add' }, (next) => {
 		let serviceId = 1;
@@ -38,24 +37,22 @@ module.exports = function a(req, res) {
 
 		Service.model.find().sort({ serviceId: -1 }).exec((err, data) => {
 			if (data[0] && data[0].serviceId) { serviceId = data[0].serviceId + 1; }
-			
+
 			const newService = new Service.model({
-				serviceId: serviceId,
-				name: req.body.name,				
+				serviceId,
+				name: req.body.name,
 				ip: randomip('192.168.2.0', 24),
 				date_end: new Date(year + 1, month, day),
 				dbase: 'db12.toirus.ru',
-				username: 'root_'+serviceId,
+				username: `root_${serviceId}`,
 				users_num: req.body.users_num,
 				tags_num: req.body.tags_num,
 				client: req.body.client,
 				description: req.body.description,
-				});
+			});
 			const updater = newService.getUpdateHandler(req, res, {
 				errorMessage: 'Проблема с добавлением сервиса ',
 			});
-
-			nService = newService;
 
 			updater.process(req.body, {
 				flashErrors: true,
@@ -65,9 +62,9 @@ module.exports = function a(req, res) {
 				if (err) {
 					locals.validationErrors = err.errors;
 					return next();
-				} else {
-					let paymentId = 1;
-					Payment.model.find().populate('client').sort({ paymentId: -1 })
+				}
+				let paymentId = 1;
+				Payment.model.find().populate('client').sort({ paymentId: -1 })
 						.exec((err2, data) => {
 							if (data[0] && data[0].paymentId) { paymentId = data[0].paymentId + 1; }
 							console.log(newService);
@@ -77,10 +74,10 @@ module.exports = function a(req, res) {
 								service: newService,
 								client: req.body.client,
 								user: locals.user,
-								method: method,
+								method,
 								sum: ((req.body.users_num * 100) + (req.body.tags_num * 10) + 30000),
 								status: 'new',
-								}).save((err4) => {
+							}).save((err4) => {
 								if (err4) { console.log(err4); }
 							});
 
@@ -94,27 +91,26 @@ module.exports = function a(req, res) {
 							request.post(
 								'http://saas.toirus.ru/newservice',
 								{ json: { idservice: serviceId, clientId: req.body.client._id } },
-								function (error, response, body) {
+								(error, response, body) => {
 									console.log(error);
 									if (!error && response.statusCode === 200) {
 										console.log(body);
 									}
-									Service.model.findOne({serviceId: serviceId}, function(service_error, service) {
+									Service.model.findOne({ serviceId }, (service_error, service) => {
 										if (service_error) return res.err(service_error);
-										console.log("new");
+										console.log('new');
 										console.log(service);
 										// TODO change on real user name and password
 										service.password = Math.random().toString(36).substr(2, 7);
-										service.save(function(service_save_err)  {
+										service.save((service_save_err) => {
 											if (service_save_err) { console.log(service_save_err); }
 										});
 									});
-								}
-							);					 
+								},
+							);
 							req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
 							return res.redirect('/servicenew');
 						});
-				}
 			});
 		});
 	});

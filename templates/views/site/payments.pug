@@ -32,7 +32,8 @@ block content
 									td.pl-1 
 										if payment.service
 											a(href='/service/' + payment.service._id)| #{payment.service.name}
-									td.pl-1.no-wrap #{payment._.createdAt.format('DD MMM YYYY hh:mm:ss')}
+									td.pl-1.no-wrap 
+										font.bgray #{payment._.createdAt.format('DD MMM YYYY hh:mm:ss')}
 									td.pl-1 
 										a(href='/payment/' + payment._id)|  #{payment.name}
 									td.pl-1

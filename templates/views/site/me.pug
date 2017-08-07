@@ -43,8 +43,9 @@ block content
 			if tickets
 				each ticket in tickets
 					if ticket
-						p.lead.ph-1 #{ticket._.createdAt.format('DD MMM YYYY hh:mm:ss')} 
-							a(href='/ticket/' + ticket._id)|  ##{ticket.ticketId}
+						p.lead.ph-1 
+							font.bgray #{ticket._.createdAt.format('DD MMM YYYY hh:mm:ss')}
+							a(href='/ticket/' + ticket._id)|    ##{ticket.ticketId}
 							a(href='/ticket/' + ticket._id)|  #{ticket.name}
 							if ticket.ticketStatus === 'open'
 								font.status-label.opened| открыт
@@ -63,8 +64,9 @@ block content
 			if payments
 				each payment in payments
 					if payment
-						p.lead.ph-1 #{payment._.createdAt.format('DD MMM YYYY hh:mm:ss')} 
-							a(href='/payment/' + payment._id)|  ##{payment.paymentId}
+						p.lead.ph-1 
+							font.bgray #{payment._.createdAt.format('DD MMM YYYY hh:mm:ss')}
+							a(href='/payment/' + payment._id)|    ##{payment.paymentId}
 							a(href='/payment/' + payment._id)|  #{payment.name}
 							if payment.status === 'new'
 								font.status-label.opened| не оплачен

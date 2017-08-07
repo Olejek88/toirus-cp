@@ -19,7 +19,8 @@ block content
 			if tickets
 				each ticket in tickets
 					if ticket
-						p.lead.ph-1 #{ticket._.createdAt.format('DD MMM YYYY hh:mm:ss')}
+						p.lead.ph-1 
+							font.bgray #{ticket._.createdAt.format('DD MMM YYYY hh:mm:ss')}
 							a(href='/ticket/' + ticket._id)|  ##{ticket.ticketId}
 							a(href='/ticket/' + ticket._id)|  #{ticket.name}
 							if ticket.ticketStatus === 'open'

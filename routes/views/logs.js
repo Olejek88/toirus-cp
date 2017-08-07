@@ -7,10 +7,10 @@ module.exports = function a(req, res) {
 	const locals = res.locals;
 
 	locals.data = {
-		logs: []
+		logs: [],
 	};
 
-	/*view.on('init', function(next) {
+	/* view.on('init', function(next) {
 		view.query('logs', Log.model.find().sort('updateAt').sort('-createdAt'));
 		Log.find().where('user', locals.user)
 		.sort('-createdAt')
@@ -22,9 +22,9 @@ module.exports = function a(req, res) {
 			//return view.render('site/logs');
 			next(err);
 		});
-	});*/
-	//console.log('render');
-	//console.log(locals.data.logs);
+	}); */
+	// console.log('render');
+	// console.log(locals.data.logs);
 	view.query('logs', Log.model.find().sort('updateAt').sort('-createdAt'));
 	view.render('site/logs');
 };

@@ -41,6 +41,7 @@ module.exports = function a(req, res) {
 					// return next();
 					return res.redirect('/tickets');
 				});
+				return next();
 			});
 	});
 

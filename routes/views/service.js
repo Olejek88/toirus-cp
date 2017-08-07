@@ -60,6 +60,7 @@ module.exports = function a(req, res) {
 				}).save((err2) => {
 					if (err2) { console.log(err); }
 				});
+
 				return res.redirect('/services');
 			});
 	});

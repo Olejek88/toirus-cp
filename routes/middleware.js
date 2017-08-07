@@ -55,7 +55,7 @@ exports.initLocals = function initlocals(req, res, next) {
 	Inits the error handler functions into `req`
 */
 
-exports.initErrorHandlers = function (req, res, next) {
+exports.initErrorHandlers = function initErrorHandlers(req, res, next) {
 	res.err = function (err, title, message) {
 		res.status(500).render('errors/500', {
 			err,
@@ -77,7 +77,7 @@ exports.initErrorHandlers = function (req, res, next) {
 	Fetches and clears the flashMessages before a view is rendered
 */
 
-exports.flashMessages = function (req, res, next) {
+exports.flashMessages = function flashMessages(req, res, next) {
 	const flashMessages = {
 		info: req.flash('info'),
 		success: req.flash('success'),
@@ -93,7 +93,7 @@ exports.flashMessages = function (req, res, next) {
 	Prevents people from accessing protected pages when they're not signed in
  */
 
-exports.requireUser = function (req, res, next) {
+exports.requireUser = function requireUser(req, res, next) {
 	if (!req.user) {
 		req.flash('error', 'Пожалуйста зарегистрируйтесь для доступа к странице');
 		res.redirect('/signin');

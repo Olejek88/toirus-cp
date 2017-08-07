@@ -22,12 +22,12 @@ module.exports = function a(req, res) {
 				if (!ticket) return res.notfound('Запрос не найден');
 				locals.ticket = ticket;
 				console.log(ticket.name);
-				
+
 				Ticket.model.find()
 					.where('ticketRef', ticket.ticketId)
-					.exec((err, tickets) => {
+					.exec((err2, tickets) => {
 						console.log(tickets.length);
-						  if (err) return res.err(err);
+						if (err2) return res.err(err2);
 						locals.tickets = tickets;
 						return next();
 					});
