@@ -46,6 +46,7 @@ const routes = {
 //	api: importRoutes('./api'),
 	views: importRoutes('./views'),
 	auth: importRoutes('./auth'),
+	tools: importRoutes('./tools'),
 };
 
 // Bind Routes

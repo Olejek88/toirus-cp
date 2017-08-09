@@ -33,7 +33,6 @@ module.exports = function a(req, res) {
 					});
 			});
 	});
-
 	view.render('site/ticket');
 };
 exports = module.exports;

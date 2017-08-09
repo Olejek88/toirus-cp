@@ -79,6 +79,7 @@ module.exports = function a(req, res) {
 
 	view.on('render', (next) => {
 		let sum = 0;
+		let index = 0;
 		locals.balance = 0;
 		Payment.model.find()
 		.where('client', req.user.client)
@@ -86,7 +87,7 @@ module.exports = function a(req, res) {
 		.exec((err, payments) => {
 			if (err) return res.err(err);
 			if (payments) {
-				for (const index in payments) {
+				for (; index < payments.length; index += 1) {
 					sum += payments[index].sum;
 				}
 			}

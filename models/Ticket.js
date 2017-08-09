@@ -3,7 +3,7 @@ const keystone = require('keystone');
 const Types = keystone.Field.Types;
 
 const Ticket = new keystone.List('Ticket', {
-    autokey: { from: 'ticketId', path: 'slug', unique: false },
+	autokey: { from: 'ticketId', path: 'slug', unique: false },
 });
 
 Ticket.add({

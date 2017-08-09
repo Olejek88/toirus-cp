@@ -1,7 +1,7 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
 require('dotenv').config();
-
+const schedule = require('node-schedule');
 const keystone = require('keystone');
 // const i18n = require('i18n');
 // const cons = require('consolidate');
@@ -51,26 +51,6 @@ keystone.set('locals', {
   editable: keystone.content.editable,
 });
 
-
-mongoose.set('server', {
-  socketOptions: {
-    keepAlive: 10000,
-    connectTimeoutMS: 10000, 
-    socketTimeoutMS: 30000
-  } });
-
-mongoose.set('safe', true);
-keystone.set('mongoose', mongoose);
-
-// Configure i18n
-/*
-i18n.configure({
-    locales:['en', 'ru'],
-    defaultLocale: 'ru',
-    directory: __dirname + '/locales'
-}); */
-
-
 keystone.set('routes', require('./routes'));
 
 keystone.set('nav', {
@@ -95,5 +75,11 @@ keystone.set('email locals', {
   }()),
 });
 
+let tools = require('./routes/tools/communicate');
+var j = schedule.scheduleJob('0 * * * *', function(){
+  tools.updateServices();  
+});
+
 keystone.start();
+
 module.exports = keystone;

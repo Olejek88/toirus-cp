@@ -1,5 +1,5 @@
-let keystone = require('keystone'),
-	async = require('async');
+const keystone = require('keystone');
+const async = require('async');
 
 const services = {
 	// github: require('../../lib/auth/github'),

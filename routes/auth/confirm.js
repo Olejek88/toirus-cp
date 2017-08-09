@@ -5,8 +5,8 @@ let keystone = require('keystone'),
 	User = keystone.list('User');
 
 exports = module.exports = function (req, res) {
-	let view = new keystone.View(req, res),
-		locals = res.locals;
+	const view = new keystone.View(req, res);
+	const locals = res.locals;
 
 	locals.section = 'profile';
 	locals.form = req.body;

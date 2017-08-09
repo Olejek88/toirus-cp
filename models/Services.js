@@ -20,7 +20,7 @@ Service.add({
 	tags_used: { type: Types.Number, initial: true, default: '0' },
 	client: { type: Types.Relationship, initial: true, ref: 'Client' },
 	username: { type: String, initial: true, default: 'root' },
-	password: { type: String, initial: true, default: 'no password' },	
+	password: { type: String, initial: true, default: 'no password' },
 	status: { type: Types.Boolean, index: true, initial: true, label: 'Статус' },
 	date: { type: Types.Datetime, default: Date.now },
 	date_end: { type: Types.Datetime, default: Date.now },

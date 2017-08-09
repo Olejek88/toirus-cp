@@ -58,15 +58,17 @@ module.exports = function a(req, res) {
 				flashErrors: true,
 				logErrors: true,
 				fields: 'name,dbase,users_num,tags_num,description',
-			}, (err) => {
-				if (err) {
-					locals.validationErrors = err.errors;
+			}, (err2) => {
+				if (err2) {
+					locals.validationErrors = err2.errors;
 					return next();
 				}
 				let paymentId = 1;
 				Payment.model.find().populate('client').sort({ paymentId: -1 })
-						.exec((err2, data) => {
-							if (data[0] && data[0].paymentId) { paymentId = data[0].paymentId + 1; }
+						.exec((err3, paymentData) => {
+							if (paymentData[0] && paymentData[0].paymentId) {
+								paymentId = paymentData[0].paymentId + 1;
+							}
 							console.log(newService);
 							new Payment.model({
 								paymentId,
@@ -96,17 +98,15 @@ module.exports = function a(req, res) {
 									if (!error && response.statusCode === 200) {
 										console.log(body);
 									}
-									Service.model.findOne({ serviceId }, (service_error, service) => {
-										if (service_error) return res.err(service_error);
-										console.log('new');
-										console.log(service);
+									Service.model.findOne({ serviceId }, (serviceError, service) => {
+										if (serviceError) return res.err(serviceError);
 										// TODO change on real user name and password
 										service.password = Math.random().toString(36).substr(2, 7);
-										service.save((service_save_err) => {
-											if (service_save_err) { console.log(service_save_err); }
+										service.save((serviceSaveError) => {
+											if (serviceSaveError) { console.log(serviceSaveError); }
 										});
 									});
-								},
+								}
 							);
 							req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
 							return res.redirect('/servicenew');
