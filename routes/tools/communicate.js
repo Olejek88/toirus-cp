@@ -6,7 +6,7 @@ let index = 0;
 
 function requestService(service) {
 	request({ method: 'GET',
-		uri: `http://saas.toirus.ru/getservice/${service.serviceId}`,
+		uri: `http://api.toirus.ru/control-panel/user-list?sid=${service.serviceId}`,
 	},
 			(error, response, body) => {
 				if (error) {
