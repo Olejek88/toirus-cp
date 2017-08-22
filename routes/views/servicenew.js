@@ -90,12 +90,12 @@ module.exports = function a(req, res) {
 								if (err4) { console.log(err4); }
 							});
 
-							console.log('http://api.toirus.ru/control-panel/create-service?sid=' + serviceId);
+							console.log(`http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`);
 
 							request({
-								url: 'http://api.toirus.ru/control-panel/create-service?sid=' + serviceId,
-								method: 'GET'
-							}, function(error, response, body){
+								url: `http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`,
+								method: 'GET',
+							}, (error, response, body) => {
 								console.log(body);
 								if (!error && response) {
 									console.log(response.statusCode);
@@ -105,24 +105,23 @@ module.exports = function a(req, res) {
 								}
 								Service.model.findOne({ serviceId }, (serviceError, service) => {
 									if (serviceError) return res.err(serviceError);
-									//var result = extractJSON(body);
+									// var result = extractJSON(body);
 									try {
-										var json_obj = JSON.parse(body);
-										//service.password = Math.random().toSring(36).substr(2, 7);
-										service.password = json_obj["password"];
-										service.username = json_obj["username"];
-										console.log(service.password + ' ' + service.username);
+										const json_obj = JSON.parse(body);
+										// service.password = Math.random().toSring(36).substr(2, 7);
+										service.password = json_obj.password;
+										service.username = json_obj.username;
+										console.log(`${service.password} ${service.username}`);
 										service.save((serviceSaveError) => {
 											if (serviceSaveError) { console.log(serviceSaveError); }
 										});
-									}
-									catch(e) {
+									}									catch (e) {
 										console.log('failed');
 									}
 								});
 							});
-/*		
-							request.post(									
+/*
+							request.post(
 								'http://api.toirus.ru/control-panel/create-service?sid=' + serviceId,
 //								{ json: { idservice: serviceId, clientId: req.body.client._id } },
 								(error, response, body) => {
@@ -140,7 +139,7 @@ module.exports = function a(req, res) {
 										service.save((serviceSaveError) => {
 											if (serviceSaveError) { console.log(serviceSaveError); }
 										});
-									});*/
+									}); */
 							req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
 							return res.redirect('/servicenew');
 						});
@@ -181,29 +180,30 @@ module.exports = function a(req, res) {
 };
 
 function extractJSON(str) {
-    var firstOpen, firstClose, candidate;
-    firstOpen = str.indexOf('{', firstOpen + 1);
-    do {
-        firstClose = str.lastIndexOf('}');
-        console.log('firstOpen: ' + firstOpen, 'firstClose: ' + firstClose);
-        if(firstClose <= firstOpen) {
-            return null;
-        }
-        do {
-            candidate = str.substring(firstOpen, firstClose + 1);
-            console.log('candidate: ' + candidate);
-            try {
-                var res = JSON.parse(candidate);
-                console.log('...found');
-                return [res, firstOpen, firstClose + 1];
-            }
-            catch(e) {
-                console.log('...failed');
-            }
-            firstClose = str.substr(0, firstClose).lastIndexOf('}');
-        } while(firstClose > firstOpen);
-        firstOpen = str.indexOf('{', firstOpen + 1);
-    } while(firstOpen != -1);
-};
+	let firstOpen,
+		firstClose,
+		candidate;
+	firstOpen = str.indexOf('{', firstOpen + 1);
+	do {
+		firstClose = str.lastIndexOf('}');
+		console.log(`firstOpen: ${firstOpen}`, `firstClose: ${firstClose}`);
+		if (firstClose <= firstOpen) {
+			return null;
+		}
+		do {
+			candidate = str.substring(firstOpen, firstClose + 1);
+			console.log(`candidate: ${candidate}`);
+			try {
+				const res = JSON.parse(candidate);
+				console.log('...found');
+				return [res, firstOpen, firstClose + 1];
+			} catch (e) {
+				console.log('...failed');
+			}
+			firstClose = str.substr(0, firstClose).lastIndexOf('}');
+		} while (firstClose > firstOpen);
+		firstOpen = str.indexOf('{', firstOpen + 1);
+	} while (firstOpen != -1);
+}
 
 exports = module.exports;
