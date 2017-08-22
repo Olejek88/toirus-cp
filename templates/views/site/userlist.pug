@@ -1,0 +1,30 @@
+extends ../../layouts/default
+
+block intro
+
+block flash-messages
+
+block content
+	.container-sm
+		.page-intro
+			span.entypo.entypo-cloud(font-size:40px)
+			|   Пользователи сервиса
+			| 
+			br
+		if users.length
+			each user in users
+				if user
+					.page-content.tile.ph-0.pv-2.mb-2
+						.panel-heading
+							| список
+						br
+						p.lead.ph-1 Пользователь: #{user.name}
+						p.lead.ph-1 Статус: 
+							if user.status
+								font.bgreen активен
+							else
+								font.bred не активен
+				else
+					h3.text-muted Нет пользователей
+
+							

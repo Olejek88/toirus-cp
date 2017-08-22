@@ -40,8 +40,10 @@ block content
 						p.lead.ph-1 База данных: #{server.dbase}
 						p.lead.ph-1 ip-адрес: #{server.ip}
 						p.lead.ph-1 Имя пользователя: #{server.username}
-						p.lead.ph-1 Пароль: #{server.password}
-						p.lead.ph-1 Пользователей (активно/всего): #{server.users_used}/#{server.users_num}
+						p.lead.ph-1 Пароль: #{server.password} 
+							a(href='/resetpass/' + id).text-muted (сменить пароль)
+						p.lead.ph-1 Пользователей (активно/всего): 
+							a(href='/service/' + id + '/userlist/').text-muted #{server.users_used}/#{server.users_num}
 						p.lead.ph-1 Тегов (активно/всего): #{server.tags_used}/#{server.tags_num}
 						p.lead.ph-1 Дата регистрации услуги: #{server._.date.format('DD/MM/YYYY hh:mm:ss')}
 						p.lead.ph-1 Дата окончания услуги: #{server._.date_end.format('DD/MM/YYYY hh:mm:ss')}

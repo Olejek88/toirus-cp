@@ -113,6 +113,7 @@ module.exports = function (app) {
 	// app.all('/serviceedit', routes.views.serviceedit);
 	app.all('/service/:service', routes.views.service);
 	app.all('/service/:id', routes.views.service);
+	app.all('/service/:id/userlist', routes.views.userlist);
 
 	// Tickets
 	app.all('/tickets', routes.views.tickets);
@@ -137,7 +138,6 @@ module.exports = function (app) {
 
 	// Logs
 	app.all('/logs', routes.views.logs);
-
 	app.all('/agreement', routes.views.agreement);
 
 	// API
