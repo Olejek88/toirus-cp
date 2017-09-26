@@ -76,8 +76,8 @@ keystone.set('email locals', {
 });
 
 let tools = require('./routes/tools/communicate');
-var j = schedule.scheduleJob('0 * * * *', function(){
-  tools.updateServices();  
+var j = schedule.scheduleJob('* /5 * * *', function(){
+	tools.updateServices();  
 });
 
 keystone.start();
