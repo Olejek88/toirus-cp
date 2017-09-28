@@ -13,7 +13,7 @@ keystone.init({
   back: '/me',
 
   port: '3000',
-  host: '127.0.0.1',
+  host: '192.168.1.16',
   mongo: 'mongodb://localhost/toir-dev',
   'mongo options': { server: { keepAlive: 1 }},
   sass: 'public',
@@ -75,9 +75,9 @@ keystone.set('email locals', {
   }()),
 });
 
-let tools = require('./routes/tools/communicate');
+const tools2 = require('./routes/tools/communicate');
 var j = schedule.scheduleJob('0 * * * *', function(){
-  tools.updateServices();  
+  tools2.updateServices();
 });
 
 keystone.start();

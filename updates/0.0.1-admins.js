@@ -9,6 +9,6 @@
 
 exports.create = {
   User: [
- { 'name.first': 'Admin', 'name.last': 'User', email: 'olejek8@yandex.ru', password: 'admin', isAdmin: true, roles: ['role_super'], __ref: 'admin_user' },
+ { 'name': 'Olejek', email: 'olejek8@yandex.ru', password: 'admin', isAdmin: true, roles: ['role_super'], __ref: 'admin_user' },
   ],
 };
