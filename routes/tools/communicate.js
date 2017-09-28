@@ -36,7 +36,7 @@ module.exports = { updateServices(done) {
 	Service.model.find((serviceError, services) => {
 		if (serviceError) return console.log(serviceError);
 		for (; index < services.length; index += 1) {
-			requestService(services[index]);
+			// requestService(services[index]);
 		}
 	});
 },
