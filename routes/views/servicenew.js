@@ -10,9 +10,12 @@ const Log = keystone.list('Log');
 const randomip = require('random-ip');
 const ObjectID = require('mongodb').ObjectID;
 
+let ret=1;
+
 module.exports = function a(req, res) {
 	const view = new keystone.View(req, res);
 	const locals = res.locals;
+	let pid;
 	let method;
 
 	locals.section = 'servicenew';
@@ -65,84 +68,60 @@ module.exports = function a(req, res) {
 				}
 				let paymentId = 1;
 				Payment.model.find().populate('client').sort({ paymentId: -1 })
-						.exec((err3, paymentData) => {
-							if (paymentData[0] && paymentData[0].paymentId) {
-								paymentId = paymentData[0].paymentId + 1;
-							}
-							console.log(newService);
-							new Payment.model({
-								paymentId,
-								name: `Платеж за ${req.body.name} (годовой)`,
-								service: newService,
-								client: req.body.client,
-								user: locals.user,
-								method,
-								sum: ((req.body.users_num * 100) + (req.body.tags_num * 10) + 30000),
-								status: 'new',
-							}).save((err4) => {
-								if (err4) { console.log(err4); }
-							});
-
-							new Log.model({
-								description: `Пользователем ${locals.user.name} заказана услуга ${req.body.name}`,
-								user: locals.user,
-							}).save((err4) => {
-								if (err4) { console.log(err4); }
-							});
-
-							console.log(`http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`);
-
-							request({
-								url: `http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`,
-								method: 'GET',
-							}, (error, response, body) => {
-								console.log(body);
-								if (!error && response) {
-									console.log(response.statusCode);
-								}
-								if (!error && response.statusCode === 200) {
-									console.log(body);
-								}
-								Service.model.findOne({ serviceId }, (serviceError, service) => {
-									if (serviceError) return res.err(serviceError);
-									// var result = extractJSON(body);
-									try {
-										const json_obj = JSON.parse(body);
-										// service.password = Math.random().toSring(36).substr(2, 7);
-										service.password = json_obj.password;
-										service.username = json_obj.username;
-										console.log(`${service.password} ${service.username}`);
-										service.save((serviceSaveError) => {
-											if (serviceSaveError) { console.log(serviceSaveError); }
-										});
-									}									catch (e) {
-										console.log('failed');
-									}
-								});
-							});
-/*
-							request.post(
-								'http://api.toirus.ru/control-panel/create-service?sid=' + serviceId,
-//								{ json: { idservice: serviceId, clientId: req.body.client._id } },
-								(error, response, body) => {
-									console.log(error);
-									if (!error && response) {
-										console.log(response.statusCode);
-									}
-									if (!error && response.statusCode === 200) {
-										console.log(body);
-									}
-									Service.model.findOne({ serviceId }, (serviceError, service) => {
-										if (serviceError) return res.err(serviceError);
-										// TODO change on real user name and password
-										service.password = Math.random().toString(36).substr(2, 7);
-										service.save((serviceSaveError) => {
-											if (serviceSaveError) { console.log(serviceSaveError); }
-										});
-									}); */
-							req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
-							return res.redirect('/servicenew');
+					.exec((err3, paymentData) => {
+						if (paymentData[0] && paymentData[0].paymentId) {
+							paymentId = paymentData[0].paymentId + 1;
+						}
+						console.log(newService);
+						new Payment.model({
+							paymentId,
+							name: `Платеж за ${req.body.name} (годовой)`,
+							service: newService,
+							client: req.body.client,
+							user: locals.user,
+							method,
+							sum: ((req.body.users_num * 100) + (req.body.tags_num * 10) + 30000),
+							status: 'new',
+						}).save((err4) => {
+							if (err4) { console.log(err4); }
 						});
+						
+						new Log.model({
+							description: `Пользователем ${locals.user.name} заказана услуга ${req.body.name}`,
+							user: locals.user,
+						}).save((err4) => {
+							if (err4) { console.log(err4); }
+						});
+
+						console.log(`http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`);
+						request({
+							url: `http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`,
+							method: 'GET',
+						}, (error, response, body) => {
+							console.log(body);
+							if (!error && response) {
+								console.log(response.statusCode);
+							}
+							if (!error && response.statusCode === 200) {
+								console.log(body);
+							}
+								
+							const json_obj = JSON.parse(body);
+							pid = json_obj.pid;
+							console.log("pid="+pid+" pd="+json_obj.pid);
+							if (pid>0) {
+								getResultFromServer(serviceId, pid, req, res, function() {
+									console.log("!!!first return");
+									if (ret===0) {
+										req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
+										return res.redirect('/servicenew');
+									}
+									else 
+										return res.err("При добавлении сервера возникла ошибка");
+								});
+							}
+						});
+					});
 			});
 		});
 	});
@@ -178,6 +157,53 @@ module.exports = function a(req, res) {
 
 	view.render('site/servicenew');
 };
+
+function getResultFromServer(serId, pId, req, res, next)	{
+	console.log(`http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}`);
+	request({
+		url: `http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}`,
+		method: 'GET',
+	}, (error2, response2, body) => {
+		console.log(body);
+		if (!error2 && response2) {
+			//console.log(response2.statusCode);
+		}
+		if (!error2 && response2.statusCode === 200) {
+			//console.log(body);
+		}
+		if (error2) {
+			return next();
+		}
+		Service.model.where('serviceId',serId).findOne().exec((serviceError, service) => {
+			if (serviceError) return next();
+			// var result = extractJSON(body);
+			try {
+				const json_obj = JSON.parse(body);
+				if (json_obj.status==='process') {
+					getResultFromServer(serId, pId, req, res, function() {
+					});
+				}
+				if (json_obj.status==='complete') {				
+					service.password = json_obj.password;
+					service.username = json_obj.username;
+					service.dbase = 'db.'+serId+'toirus.ru';
+					service.save((serviceSaveError) => {
+						if (serviceSaveError) { console.log(serviceSaveError); }
+						console.log ("Service save success");
+						//ret=0;
+						req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
+						return res.redirect('/servicenew');
+						//return next();
+					});
+				}
+			}
+			catch (e) {
+				console.log('['+serId+'] failed: '+e);
+				return next();
+			}
+		});
+	});
+}
 
 function extractJSON(str) {
 	let firstOpen,
