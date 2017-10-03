@@ -17,7 +17,7 @@ User.add({
 	client: { type: Types.Relationship, ref: 'Client', many: true },
 	// client: { type: Mongoose.Schema.Types.ObjectId, ref: 'Client' },
 	status: { type: Types.Boolean, index: true, initial: true, label: 'Статус' },
-	roles: { type: Types.Relationship, ref: 'Role', many: true },
+	//roles: { type: Types.Relationship, ref: 'Role', many: true },
 	uuid: {
 		type: String,
 		index: { unique: true },

@@ -22,7 +22,9 @@ module.exports = function a(req, res) {
 		.where('_id', req.user._id)
 		.populate('client')
 		.exec((err, user) => {
-			if (err) return res.err(err);
+			if (err)  {
+			    return res.err(err);
+			}
 			if (!user) {
 				req.flash('info', 'Пользователь не найден, зарегистируйтесь снова');
 				return res.redirect('/signin');
@@ -36,8 +38,11 @@ module.exports = function a(req, res) {
 		Service.model.find()
 			.where('client', req.user.client)
 			.count((err, count) => {
-				if (err) return res.err(err);
-				locals.servicecount = count;
+				locals.servicecount = 0;
+				if (!err) {
+				    //return res.err(err);
+				     count;
+				}
 				return next();
 			});
 	});
@@ -47,8 +52,12 @@ module.exports = function a(req, res) {
 			.where('client', req.user.client)
 			.where('status', true)
 			.count((err, count) => {
-				if (err) return res.err(err);
-				locals.serviceactive = count;
+				locals.serviceactive = 0;
+				if (!err) {
+				    //return res.err(err);
+				     locals.serviceactive = count;
+				}
+
 				return next();
 			});
 	});
@@ -59,7 +68,9 @@ module.exports = function a(req, res) {
 //		.where('ticketStatus','open')
 		.sort('-createdAt')
 		.exec((err, tickets) => {
-			if (err) return res.err(err);
+			if (err) {
+			    return res.err(err);
+			}
 			locals.tickets = tickets;
 			// dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
 			return next();
@@ -71,7 +82,9 @@ module.exports = function a(req, res) {
 		.where('user', req.user)
 //		.where('ticketStatus','open')
 		.count((err, count) => {
-			if (err) return res.err(err);
+			if (err) {
+			    return res.err(err);
+			}
 			locals.ticketscount = count;
 			return next();
 		});
@@ -85,13 +98,15 @@ module.exports = function a(req, res) {
 		.where('client', req.user.client)
 		.where('status', 'new')
 		.exec((err, payments) => {
-			if (err) return res.err(err);
-			if (payments) {
+			if (!err) {
+			    //return res.err(err);
+			    if (payments) {
 				for (; index < payments.length; index += 1) {
 					sum += payments[index].sum;
 				}
+    			    }
+			    locals.balance = sum * (-1);
 			}
-			locals.balance = sum * (-1);
 			return next();
 		});
 	});
@@ -101,9 +116,12 @@ module.exports = function a(req, res) {
 		.where('client', req.user.client)
 		.sort('-createdAt')
 		.exec((err, payments) => {
-			if (err) return res.err(err);
-			locals.payments = payments;
-			// dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+			if (!err) {
+			    //return res.err(err);
+			    if (payments)
+    				locals.payments = payments;
+			    // dateFormat(now, "dddd, mmmm dS, yyyy, h:MM:ss TT");
+			}
 			return next();
 		});
 	});
@@ -113,7 +131,10 @@ module.exports = function a(req, res) {
 		.where('user', req.user)
 		.where('ticketStatus', 'open')
 		.count((err, count) => {
-			if (err) return res.err(err);
+			if (err) {
+			    return res.err(err);
+			}
+
 			locals.ticketsactive = count;
 			return next();
 		});

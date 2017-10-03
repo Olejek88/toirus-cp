@@ -13,7 +13,7 @@ block content
 			a(href='/servicenew', data-from=page.path).js-auth-trigger.btn.btn-primary.btn-small.mv-1
 				span +заказать новый
 			br
-		if services.length
+		if services
 			each server in services
 				if server
 					.page-content.tile.ph-0.pv-2.mb-2

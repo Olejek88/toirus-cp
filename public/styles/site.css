@@ -4716,7 +4716,7 @@ button.list-group-item-danger {
     clear: both; }
 
 .panel-heading {
-  padding: 10px 15px;
+  padding: 0px 15px;
   border-bottom: 1px solid transparent;
   border-top-right-radius: 3px;
   border-top-left-radius: 3px; }
