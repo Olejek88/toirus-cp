@@ -8,6 +8,7 @@ const Client = keystone.list('Client');
 const Log = keystone.list('Log');
 // const Method = keystone.list('Method');
 const randomip = require('random-ip');
+const md5 = require('md5');
 const ObjectID = require('mongodb').ObjectID;
 
 let ret=1;
@@ -17,7 +18,8 @@ module.exports = function a(req, res) {
 	const locals = res.locals;
 	let pid;
 	let method;
-
+	let hash;
+	var message;
 	locals.section = 'servicenew';
 	locals.page.title = 'Заказ услуги ТОиРУС';
 
@@ -92,10 +94,13 @@ module.exports = function a(req, res) {
 						}).save((err4) => {
 							if (err4) { console.log(err4); }
 						});
-
-						console.log(`http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`);
+						console.log(process.env.API_SERVER_KEY);
+						console.log(serviceId+""+process.env.API_SERVER_KEY);
+						message = serviceId+""+process.env.API_SERVER_KEY;
+						hash=md5(message);
+						console.log(`http://api.toirus.ru/control-panel/create-service?sid=${serviceId}&hash=${hash}`);
 						request({
-							url: `http://api.toirus.ru/control-panel/create-service?sid=${serviceId}`,
+							url: `http://api.toirus.ru/control-panel/create-service?sid=${serviceId}&hash=${hash}`,
 							method: 'GET',
 						}, (error, response, body) => {
 							console.log(body);
@@ -108,7 +113,9 @@ module.exports = function a(req, res) {
 								
 							const json_obj = JSON.parse(body);
 							pid = json_obj.pid;
+							pid=pid.replace(/(\r\n|\n|\r)/gm,"");
 							console.log("pid="+pid+" pd="+json_obj.pid);
+													
 							if (pid>0) {
 								getResultFromServer(serviceId, pid, req, res, function() {
 									console.log("!!!first return");
@@ -159,9 +166,13 @@ module.exports = function a(req, res) {
 };
 
 function getResultFromServer(serId, pId, req, res, next)	{
-	console.log(`http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}`);
+	let hash;
+	var message;
+	message = ""+serId+pId+process.env.API_SERVER_KEY;
+	hash = md5(message);
+	console.log(`http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}&hash=${hash}`);
 	request({
-		url: `http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}`,
+		url: `http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}&hash=${hash}`,
 		method: 'GET',
 	}, (error2, response2, body) => {
 		console.log(body);

@@ -13,7 +13,7 @@ keystone.init({
   back: '/me',
 
   port: '3000',
-  host: '192.168.1.16',
+  host: '127.0.0.1',
   mongo: 'mongodb://localhost/toir-dev',
   'mongo options': { server: { keepAlive: 1 }},
   sass: 'public',
