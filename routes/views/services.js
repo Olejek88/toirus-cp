@@ -8,7 +8,8 @@ module.exports = function a(req, res) {
 	console.log(req.user.client);
 	view.on('render', (next) => {
 		Service.model.find()
-		.where('client', req.user.client)
+		.where('client')
+		.in(req.user.client)
 		.populate('client')
 		.sort('-date')
 		.exec((err, services) => {

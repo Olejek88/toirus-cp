@@ -98,9 +98,9 @@ module.exports = function a(req, res) {
 						console.log(serviceId+""+process.env.API_SERVER_KEY);
 						message = serviceId+""+process.env.API_SERVER_KEY;
 						hash=md5(message);
-						console.log(`http://api.toirus.ru/control-panel/create-service?sid=${serviceId}&hash=${hash}`);
+						console.log(`http://`+process.env.API_SERVER_KEY+`/control-panel/create-service?sid=${serviceId}&hash=${hash}`);
 						request({
-							url: `http://api.toirus.ru/control-panel/create-service?sid=${serviceId}&hash=${hash}`,
+							url: `http://`+process.env.API_SERVER_KEY+`/control-panel/create-service?sid=${serviceId}&hash=${hash}`,
 							method: 'GET',
 						}, (error, response, body) => {
 							console.log(body);
@@ -170,9 +170,9 @@ function getResultFromServer(serId, pId, req, res, next)	{
 	var message;
 	message = ""+serId+pId+process.env.API_SERVER_KEY;
 	hash = md5(message);
-	console.log(`http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}&hash=${hash}`);
+	console.log(`http://`+process.env.API_SERVER_KEY+`/control-panel/check-status-migrate?sid=${serId}&pid=${pId}&hash=${hash}`);
 	request({
-		url: `http://api.toirus.ru/control-panel/check-status-migrate?sid=${serId}&pid=${pId}&hash=${hash}`,
+		url: `http://`+process.env.API_SERVER_KEY+`/control-panel/check-status-migrate?sid=${serId}&pid=${pId}&hash=${hash}`,
 		method: 'GET',
 	}, (error2, response2, body) => {
 		console.log(body);
