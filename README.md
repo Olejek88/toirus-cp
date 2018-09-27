@@ -14,5 +14,9 @@ API_SERVER_KEY - ключ сервера API<br/>
 6. Настроить адрес базы MongoDB (mongo)<br/>
 7. Для запуска из сонсоли требуется запустить node toirus.js<br/>
 <br/><br/>
-Визуально интерфейс выглядит следующим образом:
-<img src="/images/Screen1.jpg" />
+Визуально интерфейс выглядит следующим образом:<br/>
+<img width="300px" src="public/images/Screen1.jpg" />
+<br/><br/>
+<img width="300px" src="public/images/Screen2.jpg" />
+<br/><br/>
+<img width="300px" src="public/images/Screen3.jpg" />
