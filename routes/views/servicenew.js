@@ -202,7 +202,9 @@ function getResultFromServer(serId, pId, req, res, next)	{
 						if (serviceSaveError) { console.log(serviceSaveError); }
 						console.log ("Service save success");
 						//ret=0;
-						req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. Спасибо за выбор нашего сервиса!');
+						req.flash('success', 'Ваша заявка принята и будет обработана в течении 2х рабочих дней. \n\
+							Спасибо за выбор нашего сервиса!\n\
+							Ваше имя пользователя и пароль ('+service.password+' / '+service.username+')');
 						return res.redirect('/servicenew');
 						//return next();
 					});
